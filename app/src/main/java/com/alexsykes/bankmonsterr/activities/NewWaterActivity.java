@@ -34,6 +34,7 @@ public class NewWaterActivity extends AppCompatActivity {
                 replyIntent.putExtra(EXTRA_REPLY, water);
                 setResult(RESULT_OK, replyIntent);
             }
+            finish();
         });
     }
 }

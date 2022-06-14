@@ -14,10 +14,11 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Water.class}, version = 1, exportSchema = false)
+@Database(entities = {Water.class, Parent.class}, version = 1, exportSchema = false)
 public abstract class WaterRoomDatabase  extends RoomDatabase {
 
     public abstract WaterDao waterDao();
+    public abstract ParentDao parentDao();
 
     private static volatile WaterRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -45,14 +46,36 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
             super.onCreate(db);
 
             databaseWriteExecutor.execute(() -> {
-                WaterDao dao = INSTANCE.waterDao();
-                dao.deleteAll();
+                WaterDao waterDao = INSTANCE.waterDao();
+                ParentDao parentDao = INSTANCE.parentDao();
+                waterDao.deleteAll();
+                parentDao.deleteAll();
 
-                Water water = new Water("Aire");
-                dao.insert(water);
-                water = new Water("Wharfe");
-                dao.insert(water);
+                Parent parent = new Parent("Aire", "River");
+                parentDao.insert(parent);
+                parent = new Parent("Wharfe", "River");
+                parentDao.insert(parent);
+                parent = new Parent("Ure", "River");
+                parentDao.insert(parent);
+                parent = new Parent("Swale", "River");
+                parentDao.insert(parent);
+                parent = new Parent("Nidd", "River");
+                parentDao.insert(parent);
+                parent = new Parent("Calder", "River");
+                parentDao.insert(parent);
+                parent = new Parent("Leeds and Liverpool", "Canal");
+                parentDao.insert(parent);
+                parent = new Parent("Lakes", "Lake");
+                parentDao.insert(parent);
 
+                Water water = new Water("Buckden","Wharfe");
+                waterDao.insert(water);
+                water = new Water("Burley-in-Wharfedale","Wharfe");
+                waterDao.insert(water);
+                water = new Water("Hubberholme","Wharfe");
+                waterDao.insert(water);
+                water = new Water("Appletreewick","Wharfe");
+                waterDao.insert(water);
             });
 
         }

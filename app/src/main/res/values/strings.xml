@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BankMonsterR</string>
+    <string name="app_name">Water Finder</string>
     <string name="add_water">Add Water</string>
     <string name="hint_word">Water…</string>
     <string name="button_save">Save</string>

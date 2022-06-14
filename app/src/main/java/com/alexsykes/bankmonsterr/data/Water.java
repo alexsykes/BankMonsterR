@@ -12,12 +12,16 @@ public class Water {
 
     @NonNull
     private String name;
-    @NonNull
     private String type;
     private double lat, lng;
 
     public Water(@NonNull String name) {
         this.name = name;
+    }
+    public Water(@NonNull String name, @NonNull String parent)
+    {
+        this.name = name;
+        this.type = parent;
     }
 
 

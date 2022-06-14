@@ -25,13 +25,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener( view -> {
-            Intent intent = new Intent(MainActivity.this, NewWaterActivity.class);
-            startActivityForResult(intent, NEW_WATER_ACTIVITY_REQUEST_CODE);
-        });
-
-
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final WaterListAdapter adapter = new WaterListAdapter(new WaterListAdapter.WaterDiff());
         recyclerView.setAdapter(adapter);
@@ -40,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
         waterViewModel = new ViewModelProvider(this).get(WaterViewModel.class);
         waterViewModel.getAllWaters().observe(this, waters -> {
             adapter.submitList(waters);
+        });
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener( view -> {
+            Intent intent = new Intent(MainActivity.this, NewWaterActivity.class);
+            startActivityForResult(intent, NEW_WATER_ACTIVITY_REQUEST_CODE);
         });
     }
 

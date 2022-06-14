@@ -9,13 +9,13 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface WaterDao {
+public interface ParentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Water water);
+    void insert(Parent parent);
 
-    @Query("DELETE FROM waters")
+    @Query("DELETE FROM parents")
     void deleteAll();
 
-    @Query("SELECT * FROM waters ORDER by name ASC")
-    LiveData<List<Water>> getAllWaters();
+    @Query("SELECT * FROM parents ORDER by name ASC")
+    LiveData<List<Parent>> getAllParents();
 }

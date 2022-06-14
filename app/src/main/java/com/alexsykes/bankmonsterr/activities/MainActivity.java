@@ -1,5 +1,6 @@
 package com.alexsykes.bankmonsterr.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.alexsykes.bankmonsterr.R;
@@ -40,6 +44,26 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, NewWaterActivity.class);
             startActivityForResult(intent, NEW_WATER_ACTIVITY_REQUEST_CODE);
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.top_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings_menu_item:
+                goSettings();
+                return true;
+        }
+        return false;
+    }
+
+    private void goSettings() {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -16,6 +16,6 @@ public interface WaterDao {
     @Query("DELETE FROM waters")
     void deleteAll();
 
-    @Query("SELECT * FROM waters ORDER by name ASC")
+    @Query("SELECT * FROM waters ORDER by parentid, name ASC")
     LiveData<List<Water>> getAllWaters();
 }

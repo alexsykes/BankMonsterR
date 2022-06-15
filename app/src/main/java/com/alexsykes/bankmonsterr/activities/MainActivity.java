@@ -1,5 +1,7 @@
 package com.alexsykes.bankmonsterr.activities;
 
+// https://www.geeksforgeeks.org/bottom-navigation-bar-in-android/
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -38,19 +40,22 @@ public class MainActivity extends AppCompatActivity {
         waterViewModel.getAllWaters().observe(this, waters -> {
             adapter.submitList(waters);
         });
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener( view -> {
-            Intent intent = new Intent(MainActivity.this, NewWaterActivity.class);
-            startActivityForResult(intent, NEW_WATER_ACTIVITY_REQUEST_CODE);
-        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.top_menu, menu);
+        inflater.inflate(R.menu.bottom_nav_bar, menu);
         return true;
+    }
+
+    public void onClickCalled(String id) {
+        // Check for connectivity
+
+            Intent intent = new Intent(MainActivity.this, NewWaterActivity.class);
+            intent.putExtra("trialid", id);
+            startActivity(intent);
+
     }
 
     @Override
@@ -65,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void goSettings() {
     }
-
+/*
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -78,5 +83,5 @@ public class MainActivity extends AppCompatActivity {
                     R.string.empty_not_saved,
                     Toast.LENGTH_LONG).show();
         }
-    }
+    }*/
 }

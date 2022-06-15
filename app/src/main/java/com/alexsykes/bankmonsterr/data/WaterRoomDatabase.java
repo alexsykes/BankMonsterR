@@ -14,11 +14,12 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Water.class, Parent.class}, version = 1, exportSchema = false)
+@Database(entities = {Water.class, Parent.class, Marker.class}, version = 1, exportSchema = false)
 public abstract class WaterRoomDatabase  extends RoomDatabase {
 
     public abstract WaterDao waterDao();
     public abstract ParentDao parentDao();
+    public abstract MarkerDao markerDao();
 
     private static volatile WaterRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -36,7 +37,6 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 }
             }
         }
-
         return INSTANCE;
     }
 
@@ -48,6 +48,7 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 WaterDao waterDao = INSTANCE.waterDao();
                 ParentDao parentDao = INSTANCE.parentDao();
+                MarkerDao markerDao = INSTANCE.markerDao();
                 waterDao.deleteAll();
                 parentDao.deleteAll();
 
@@ -68,14 +69,31 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 parent = new Parent("Lakes", "Lake");
                 parentDao.insert(parent);
 
-                Water water = new Water("Buckden","Wharfe");
+                Water water = new Water("Buckden","River", 2);
                 waterDao.insert(water);
-                water = new Water("Burley-in-Wharfedale","Wharfe");
+                water = new Water("Burley","River", 2);
                 waterDao.insert(water);
-                water = new Water("Hubberholme","Wharfe");
+                water = new Water("Hubberholme","River", 2);
                 waterDao.insert(water);
-                water = new Water("Appletreewick","Wharfe");
+                water = new Water("Appletreewick","River", 2);
                 waterDao.insert(water);
+
+                Marker marker= new Marker("Skirbeck","CP","Car park",-2.28000, 54.03128);
+                markerDao.insert(marker);
+                marker= new Marker("Skirbeck","LBUS","Limit",-2.28592, 54.03171);
+                markerDao.insert(marker);
+                marker= new Marker("Skirbeck","LBDS","Limit",-2.27716, 54.02494);
+                markerDao.insert(marker);
+                marker= new Marker("Burley","CP","Car park",-1.76057, 53.91984);
+                markerDao.insert(marker);
+                marker= new Marker("Burley","RBDS","Limit",-1.75920, 53.92205);
+                markerDao.insert(marker);
+                marker= new Marker("Burley","RBUS","Limit",-1.76784, 53.92357);
+                markerDao.insert(marker);
+                marker= new Marker("Gargrave","CP1","Car park",-2.05971, 53.96105);
+                markerDao.insert(marker);
+                marker= new Marker("Gargrave","CP2","Car park",-2.101327, 53.982948);
+                markerDao.insert(marker);
             });
 
         }

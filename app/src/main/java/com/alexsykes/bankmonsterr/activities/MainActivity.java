@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_WATER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Water word = new Water(data.getStringExtra(NewWaterActivity.EXTRA_REPLY));
-            waterViewModel.insert(word);
+           // Water word = new Water(data.getStringExtra(NewWaterActivity.EXTRA_REPLY));
+          //  waterViewModel.insert(word);
         } else {
             Toast.makeText(
                     getApplicationContext(),

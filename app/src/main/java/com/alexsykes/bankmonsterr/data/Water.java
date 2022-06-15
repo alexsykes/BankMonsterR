@@ -7,47 +7,30 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "waters")
 public class Water {
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @PrimaryKey(autoGenerate = true)
     private int id;
 
     @NonNull
-    private String name;
-    private String type;
-    private double lat, lng;
+    private String name, type;
 
-    public Water(@NonNull String name) {
-        this.name = name;
-    }
-    public Water(@NonNull String name, @NonNull String parent)
-    {
-        this.name = name;
-        this.type = parent;
-    }
-
-
+    @NonNull
+    private int parentid;
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    @NonNull
+    public String getName() {
+        return name;
     }
 
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public double getLng() {
-        return lng;
-    }
-
-    public void setLng(double lng) {
-        this.lng = lng;
+    public void setName(@NonNull String name) {
+        this.name = name;
     }
 
     @NonNull
@@ -59,12 +42,18 @@ public class Water {
         this.type = type;
     }
 
-    @NonNull
-    public String getName() {
-        return this.name;
+    public int getParentid() {
+        return parentid;
     }
 
-    public void setName(@NonNull String name) {
+    public void setParentid(int parentid) {
+        this.parentid = parentid;
+    }
+
+    public Water(@NonNull String name, @NonNull String type, int parentid) {
         this.name = name;
+        this.type = type;
+        this.parentid = parentid;
     }
 }
+

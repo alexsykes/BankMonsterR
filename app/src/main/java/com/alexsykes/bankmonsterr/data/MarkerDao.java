@@ -9,15 +9,13 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface ParentDao {
+public interface MarkerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Parent parent);
+    void insert(Marker marker);
 
-    @Query("DELETE FROM parents")
+    @Query("DELETE FROM markers")
     void deleteAll();
 
-    @Query("SELECT * FROM parents ORDER by name ASC")
-    LiveData<List<Parent>> getAllParents();
+    @Query("SELECT * FROM markers ORDER by name ASC")
+    LiveData<List<Marker>> getAllMarkers();
 }
-
-

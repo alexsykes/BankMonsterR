@@ -1,6 +1,8 @@
 package com.alexsykes.bankmonsterr.activities;
 
 // https://www.geeksforgeeks.org/bottom-navigation-bar-in-android/
+// https://normanaspx.medium.com/android-room-how-works-one-to-many-relationship-example-e8a17531a3bb
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void onClickCalled(String id) {
+    public void onClickCalled(int id) {
         // Check for connectivity
 
             Intent intent = new Intent(MainActivity.this, NewWaterActivity.class);

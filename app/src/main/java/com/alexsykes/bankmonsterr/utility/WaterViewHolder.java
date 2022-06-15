@@ -1,5 +1,6 @@
 package com.alexsykes.bankmonsterr.utility;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.bankmonsterr.R;
+import com.alexsykes.bankmonsterr.activities.MainActivity;
 import com.alexsykes.bankmonsterr.data.Water;
 
 public class WaterViewHolder extends RecyclerView.ViewHolder {
@@ -22,6 +24,11 @@ public class WaterViewHolder extends RecyclerView.ViewHolder {
     public void bind(Water current, final WaterListAdapter.OnItemClickListener listener) {
         waterViewItem.setText(current.getName());
         parentViewItem.setText(String.valueOf(current.getParentid()));
+        itemView.setOnClickListener(v -> {
+            int id = current.getId();
+            Context context = itemView.getContext();
+            ((MainActivity) context).onClickCalled(id);
+        });
     }
 
     static WaterViewHolder create(ViewGroup parent) {

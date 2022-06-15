@@ -7,13 +7,13 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class ParentRepository {
-    private ParentDao parentDao;
+    private AllDao dao;
     private LiveData<List<Parent>> allParents;
 
     ParentRepository(Application application) {
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(application);
-        parentDao = db.parentDao();
-        allParents = parentDao.getAllParents();
+        dao = db.dao();
+        allParents = dao.getAllParents();
     }
 
     LiveData<List<Parent>> getAllParents() {
@@ -22,7 +22,7 @@ public class ParentRepository {
 
     void insert(Parent parent) {
         WaterRoomDatabase.databaseWriteExecutor.execute(() -> {
-            parentDao.insert(parent);
+            dao.insertParent(parent);
         });
     }
 }

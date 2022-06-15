@@ -7,13 +7,13 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 class WaterRepository {
-    private WaterDao waterDao;
+    private AllDao dao;
     private LiveData<List<Water>> allWaters;
 
     WaterRepository(Application application) {
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(application);
-        waterDao = db.waterDao();
-        allWaters = waterDao.getAllWaters();
+        dao = db.dao();
+        allWaters = dao.getAllWaters();
     }
 
     LiveData<List<Water>> getAllWaters() {
@@ -22,7 +22,7 @@ class WaterRepository {
 
     void insert(Water water) {
         WaterRoomDatabase.databaseWriteExecutor.execute(() -> {
-            waterDao.insert(water);
+            dao.insertWater(water);
         });
     }
 }

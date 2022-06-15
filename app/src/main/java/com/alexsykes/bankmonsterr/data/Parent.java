@@ -8,7 +8,11 @@ import androidx.room.PrimaryKey;
 public class Parent {
 
     @PrimaryKey(autoGenerate = true)
-    private int parentId;
+    private int id;
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @NonNull
     private String name;
@@ -19,8 +23,8 @@ public class Parent {
         this.name = name;
     }
 
-    public int getParentId() {
-        return parentId;
+    public int getId() {
+        return id;
     }
 
     @NonNull
@@ -33,6 +37,6 @@ public class Parent {
     }
 
     public void setParentId(int parentId) {
-        this.parentId = parentId;
+        this.id = parentId;
     }
 }

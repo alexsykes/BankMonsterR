@@ -7,13 +7,13 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class MarkerRepository {
-    private MarkerDao markerDao;
+    private AllDao dao;
     private LiveData<List<Marker>> allMarkers;
 
     MarkerRepository(Application application) {
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(application);
-        markerDao = db.markerDao();
-        allMarkers = markerDao.getAllMarkers();
+        dao = db.dao();
+        allMarkers = dao.getAllMarkers();
     }
 
     LiveData<List<Marker>> getAllMarkers() {
@@ -22,7 +22,7 @@ public class MarkerRepository {
 
     void insert(Marker marker) {
         WaterRoomDatabase.databaseWriteExecutor.execute(() -> {
-            markerDao.insert(marker);
+            dao.insertMarker(marker);
         });
     }
 }

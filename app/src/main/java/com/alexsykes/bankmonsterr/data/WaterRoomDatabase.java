@@ -8,6 +8,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,6 +39,7 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
+
 
             databaseWriteExecutor.execute(() -> {
                 AllDao dao = INSTANCE.dao();
@@ -124,6 +126,9 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 dao.insertMarker(marker);
                 marker= new Marker("Gargrave","CP2","Car park",-2.101327, 53.982948);
                 dao.insertMarker(marker);
+
+                List<ParentWithWaters> list = dao.getParentsWithWaterLists();
+                List<WaterAndParent> waterAndParentList = dao.getWatersAndParent();
             });
 
         }

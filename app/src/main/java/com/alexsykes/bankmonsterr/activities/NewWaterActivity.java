@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -22,6 +23,11 @@ public class NewWaterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_water);
         editWaterView = findViewById(R.id.edit_water);
+
+        Intent intent = getIntent();
+        int water_id = intent.getIntExtra("water_id",-999);
+
+        Log.i("Info", "onCreate: " + water_id);
 
         final Button button = findViewById(R.id.button_save);
         button.setOnClickListener(view -> {

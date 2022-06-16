@@ -53,11 +53,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickCalled(int id) {
         // Check for connectivity
-
             Intent intent = new Intent(MainActivity.this, NewWaterActivity.class);
-            intent.putExtra("trialid", id);
+            intent.putExtra("water_id", id);
             startActivity(intent);
-
     }
 
     @Override

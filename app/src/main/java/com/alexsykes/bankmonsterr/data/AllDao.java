@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public interface AllDao {
     @Query("SELECT * FROM parents ORDER by name ASC")
     LiveData<List<Parent>> getAllParents();
 
-    @Query("SELECT * FROM waters ORDER by parentid, name ASC")
+    @Query("SELECT * FROM waters ORDER by parent_id, name ASC")
     LiveData<List<Water>> getAllWaters();
 
     @Query("DELETE FROM markers")
@@ -38,4 +39,13 @@ public interface AllDao {
     void deleteAllWaters();
     @Query("DELETE FROM parents")
     void deleteAllParents();
+
+    @Query("SELECT waters.name as waterName, parents.name AS parentName " +
+            "FROM waters, parents " +
+            "WHERE waters.parent_id = parents.parent_id")
+    public LiveData<List<WaterParent>> loadWaterAndParents();
+
+    @Transaction
+    @Query("SELECT * FROM parents")
+    public  List<ParentWithWaters> getParentsWithWaterLists();
 }

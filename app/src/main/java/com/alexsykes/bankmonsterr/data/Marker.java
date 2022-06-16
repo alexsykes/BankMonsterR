@@ -2,14 +2,13 @@ package com.alexsykes.bankmonsterr.data;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "markers")
 public class Marker {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private int marker_id;
 
     @NonNull
     public String getCode() {
@@ -34,12 +33,12 @@ public class Marker {
         this.lng = lng;
     }
 
-    public int getId() {
-        return id;
+    public int getMarker_id() {
+        return marker_id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setMarker_id(int marker_id) {
+        this.marker_id = marker_id;
     }
 
     public double getLat() {

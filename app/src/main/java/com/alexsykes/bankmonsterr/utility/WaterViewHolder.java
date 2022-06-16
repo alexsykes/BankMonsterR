@@ -23,9 +23,9 @@ public class WaterViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Water current, final WaterListAdapter.OnItemClickListener listener) {
         waterViewItem.setText(current.getName());
-        parentViewItem.setText(String.valueOf(current.getParentid()));
+        parentViewItem.setText(String.valueOf(current.getParent_id()));
         itemView.setOnClickListener(v -> {
-            int id = current.getId();
+            int id = current.getWater_id();
             Context context = itemView.getContext();
             ((MainActivity) context).onClickCalled(id);
         });

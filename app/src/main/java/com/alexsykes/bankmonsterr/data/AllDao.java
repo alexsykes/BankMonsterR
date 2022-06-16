@@ -8,7 +8,6 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 
 import java.util.List;
-import java.util.Map;
 
 @Dao
 public interface AllDao {
@@ -43,9 +42,13 @@ public interface AllDao {
     @Query("SELECT waters.name as waterName, parents.name AS parentName " +
             "FROM waters, parents " +
             "WHERE waters.parent_id = parents.parent_id")
-    public LiveData<List<WaterParent>> loadWaterAndParents();
+     LiveData<List<WaterParent>> loadWaterAndParents();
 
     @Transaction
     @Query("SELECT * FROM parents")
-    public  List<ParentWithWaters> getParentsWithWaterLists();
+      List<ParentWithWaters> getParentsWithWaterLists();
+
+    @Transaction
+    @Query("SELECT * FROM waters")
+     List<WaterAndParent> getWatersAndParent();
 }

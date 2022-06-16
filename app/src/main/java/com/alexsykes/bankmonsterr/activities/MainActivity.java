@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,17 +22,22 @@ import com.alexsykes.bankmonsterr.R;
 import com.alexsykes.bankmonsterr.data.Water;
 import com.alexsykes.bankmonsterr.data.WaterViewModel;
 import com.alexsykes.bankmonsterr.utility.WaterListAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private WaterViewModel waterViewModel;
     public static final int NEW_WATER_ACTIVITY_REQUEST_CODE = 1;
-
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final WaterListAdapter adapter = new WaterListAdapter(new WaterListAdapter.WaterDiff());
@@ -44,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.bottom_nav_bar, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.bottom_nav_bar, menu);
+//        return true;
+//    }
 
     public void onClickCalled(int id) {
         // Check for connectivity
@@ -68,7 +74,34 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.goSettings:
+                goSettings();
+                return true;
+            case R.id.goRivers:
+                goRivers();
+                return true;
+            case R.id.goWaters:
+                goWaters();
+                return true;
+        }
+        return false;
+    }
+
+
+
     private void goSettings() {
+        Log.i("Info", "goSettings: ");
+
+    }
+    private void goWaters() {
+        Log.i("Info", "goWaters: ");
+    }
+
+    private void goRivers() {
+        Log.i("Info", "goRivers: ");
     }
 /*
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

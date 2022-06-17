@@ -31,8 +31,10 @@ public interface AllDao {
     @Query("SELECT * FROM waters ORDER by parent_id, name ASC")
     LiveData<List<Water>> getAllWaters();
 
-    @Query("SELECT * FROM waters ORDER by parent_id, name ASC")
-    List<Water> getAllWatersList();
+    @Query("SELECT * FROM waters " +
+            " WHERE type LIKE :category " +
+            "ORDER by name ASC ")
+    LiveData<List<Water>> getAllWatersList(String category);
 
     @Query("DELETE FROM markers")
     void deleteAllMarkers();
@@ -45,13 +47,28 @@ public interface AllDao {
     @Query("SELECT waters.name as waterName, parents.name AS parentName " +
             "FROM waters, parents " +
             "WHERE waters.parent_id = parents.parent_id")
-     LiveData<List<WaterParent>> loadWaterAndParents();
+    LiveData<List<WaterParent>> loadWaterAndParents();
 
     @Transaction
     @Query("SELECT * FROM parents")
-      List<ParentWithWaters> getParentsWithWaterLists();
+    List<ParentWithWaters> getParentsWithWaterLists();
 
     @Transaction
     @Query("SELECT * FROM waters")
-     List<WaterAndParent> getWatersAndParent();
+    List<WaterAndParent> getWatersAndParent();
+
+
+    @Query("SELECT waters.name AS water, parents.name AS parent " +
+            "FROM waters, parents " +
+            "WHERE waters.parent_id = parents.parent_id")
+    public LiveData<List<WaterAndParents>> WaterAndParentList();
+
+    // You can also define this class in a separate file, as long as you add the
+    // "public" access modifier.
+
 }
+
+
+
+
+

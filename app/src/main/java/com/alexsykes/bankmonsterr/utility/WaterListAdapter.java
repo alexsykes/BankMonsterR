@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.alexsykes.bankmonsterr.data.Water;
+import com.alexsykes.bankmonsterr.data.WaterAndParent;
+import com.alexsykes.bankmonsterr.data.WaterAndParents;
 
-public class WaterListAdapter extends ListAdapter<Water, WaterViewHolder> {
+public class WaterListAdapter extends ListAdapter<WaterAndParents, WaterViewHolder> {
 
     AdapterView.OnItemClickListener listener;
 
-    public WaterListAdapter(@NonNull DiffUtil.ItemCallback<Water> diffCallback) {
+    public WaterListAdapter(@NonNull DiffUtil.ItemCallback<WaterAndParents> diffCallback) {
         super(diffCallback);
     }
 
@@ -25,7 +27,7 @@ public class WaterListAdapter extends ListAdapter<Water, WaterViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull WaterViewHolder holder, int position) {
-        Water current = getItem(position);
+        WaterAndParents current = getItem(position);
         holder.bind(current, new OnItemClickListener() {
             @Override
             public void onItemClick(Water water) {
@@ -37,16 +39,16 @@ public class WaterListAdapter extends ListAdapter<Water, WaterViewHolder> {
         void onItemClick(Water water);
     }
 
-    public static class WaterDiff extends DiffUtil.ItemCallback<Water> {
+    public static class WaterDiff extends DiffUtil.ItemCallback<WaterAndParents> {
 
         @Override
-        public boolean areItemsTheSame(@NonNull Water oldItem, @NonNull Water newItem) {
+        public boolean areItemsTheSame(@NonNull WaterAndParents oldItem, @NonNull WaterAndParents newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Water oldItem, @NonNull Water newItem) {
-            return oldItem.getName().equals(newItem.getName());
+        public boolean areContentsTheSame(@NonNull WaterAndParents oldItem, @NonNull WaterAndParents newItem) {
+            return oldItem.getWater().equals(newItem.getWater());
         }
     }
 }

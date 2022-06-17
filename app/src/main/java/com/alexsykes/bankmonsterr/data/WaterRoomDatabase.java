@@ -109,6 +109,18 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 dao.insertWater(water);
                 water = new Water("Lower Dunsforth","River", 3);
                 dao.insertWater(water);
+                water = new Water("Oakworth Lakes","Lake", 8);
+                dao.insertWater(water);
+                water = new Water("Staveley Lakes","Lake", 8);
+                dao.insertWater(water);
+                water = new Water("Shipton Lake","Lake", 8);
+                dao.insertWater(water);
+                water = new Water("Bingley/Shipley","Canal", 7);
+                dao.insertWater(water);
+                water = new Water("Shipley/Esholt","Canal", 7);
+                dao.insertWater(water);
+                water = new Water("Esholt","Canal", 7);
+                dao.insertWater(water);
 
                 Marker marker= new Marker("Skirbeck","CP","Car park",-2.28000, 54.03128);
                 dao.insertMarker(marker);

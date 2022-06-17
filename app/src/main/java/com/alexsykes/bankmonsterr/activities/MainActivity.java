@@ -6,6 +6,7 @@ package com.alexsykes.bankmonsterr.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,17 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.alexsykes.bankmonsterr.R;
 import com.alexsykes.bankmonsterr.data.Water;
+import com.alexsykes.bankmonsterr.data.WaterAndParents;
 import com.alexsykes.bankmonsterr.data.WaterViewModel;
 import com.alexsykes.bankmonsterr.utility.WaterListAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -47,10 +45,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         waterViewModel = new ViewModelProvider(this).get(WaterViewModel.class);
-        List<Water> waterList =  waterViewModel.getAllWatersList();
-        waterViewModel.getAllWaters().observe(this, waters -> {
-            adapter.submitList(waters);
+        LiveData<List<WaterAndParents>> waterandparents = waterViewModel.getWaterAndParentList();
+        LiveData<List<Water>> waterList =  waterViewModel.getRiverList();
+        // List<Water> theWaters = waterList.getValue();
+
+//        waterViewModel.getAllWaters().observe(this, waters -> {
+//            adapter.submitList(waters);
+//        });
+
+        waterandparents.observe(this, w -> {
+            adapter.submitList(w);
         });
+
+//        waterList.observe(this, waters -> {
+//            adapter.submitList(waters);
+//        });
     }
 
     public void onClickCalled(int id) {

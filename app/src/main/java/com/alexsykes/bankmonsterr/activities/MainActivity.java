@@ -46,13 +46,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         waterViewModel = new ViewModelProvider(this).get(WaterViewModel.class);
         LiveData<List<WaterAndParents>> waterandparents = waterViewModel.getWaterAndParentList();
-        LiveData<List<Water>> waterList =  waterViewModel.getRiverList();
-        // List<Water> theWaters = waterList.getValue();
-
-//        waterViewModel.getAllWaters().observe(this, waters -> {
-//            adapter.submitList(waters);
-//        });
-
+;
         waterandparents.observe(this, w -> {
             adapter.submitList(w);
         });

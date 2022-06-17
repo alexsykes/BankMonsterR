@@ -43,11 +43,11 @@ public interface AllDao {
     void deleteAllWaters();
     @Query("DELETE FROM parents")
     void deleteAllParents();
-
-    @Query("SELECT waters.name as waterName, parents.name AS parentName " +
-            "FROM waters, parents " +
-            "WHERE waters.parent_id = parents.parent_id")
-    LiveData<List<WaterParent>> loadWaterAndParents();
+//
+//    @Query("SELECT waters.water_id as water_id, waters.name as waterName, parents.name AS parentName " +
+//            "FROM waters, parents " +
+//            "WHERE waters.parent_id = parents.parent_id")
+//    LiveData<List<WaterParent>> loadWaterAndParents();
 
     @Transaction
     @Query("SELECT * FROM parents")
@@ -58,9 +58,10 @@ public interface AllDao {
     List<WaterAndParent> getWatersAndParent();
 
 
-    @Query("SELECT waters.name AS water, parents.name AS parent " +
+    @Query("SELECT waters.water_id, waters.name AS water, parents.name AS parent " +
             "FROM waters, parents " +
-            "WHERE waters.parent_id = parents.parent_id")
+            "WHERE waters.parent_id = parents.parent_id " +
+            "ORDER BY parent, water ASC")
     public LiveData<List<WaterAndParents>> WaterAndParentList();
 
     // You can also define this class in a separate file, as long as you add the

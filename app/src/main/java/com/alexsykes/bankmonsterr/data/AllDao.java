@@ -31,6 +31,9 @@ public interface AllDao {
     @Query("SELECT * FROM waters ORDER by parent_id, name ASC")
     LiveData<List<Water>> getAllWaters();
 
+    @Query("SELECT * FROM waters ORDER by parent_id, name ASC")
+    List<Water> getAllWatersList();
+
     @Query("DELETE FROM markers")
     void deleteAllMarkers();
 

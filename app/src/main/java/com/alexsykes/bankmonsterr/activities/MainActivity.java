@@ -25,6 +25,8 @@ import com.alexsykes.bankmonsterr.utility.WaterListAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private WaterViewModel waterViewModel;
     public static final int NEW_WATER_ACTIVITY_REQUEST_CODE = 1;
@@ -45,17 +47,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         waterViewModel = new ViewModelProvider(this).get(WaterViewModel.class);
+        List<Water> waterList =  waterViewModel.getAllWatersList();
         waterViewModel.getAllWaters().observe(this, waters -> {
             adapter.submitList(waters);
         });
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.bottom_nav_bar, menu);
-//        return true;
-//    }
 
     public void onClickCalled(int id) {
         // Check for connectivity
@@ -84,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 goRivers();
                 return true;
             case R.id.goWaters:
-                goWaters();
+                goAllWaters();
                 return true;
         }
         return false;
@@ -96,25 +92,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         Log.i("Info", "goSettings: ");
 
     }
-    private void goWaters() {
-        Log.i("Info", "goWaters: ");
+    private void goAllWaters() {
+        Intent intent = new Intent(MainActivity.this,AllWatersActivity.class );
+        startActivity(intent);
     }
 
     private void goRivers() {
         Log.i("Info", "goRivers: ");
     }
-/*
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == NEW_WATER_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-           // Water word = new Water(data.getStringExtra(NewWaterActivity.EXTRA_REPLY));
-          //  waterViewModel.insert(word);
-        } else {
-            Toast.makeText(
-                    getApplicationContext(),
-                    R.string.empty_not_saved,
-                    Toast.LENGTH_LONG).show();
-        }
-    }*/
 }

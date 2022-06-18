@@ -40,7 +40,6 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
 
-
             databaseWriteExecutor.execute(() -> {
                 AllDao dao = INSTANCE.dao();
                 dao.deleteAllWaters();
@@ -139,8 +138,8 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 marker= new Marker("Gargrave","CP2","Car park",-2.101327, 53.982948);
                 dao.insertMarker(marker);
 
-                List<ParentWithWaters> list = dao.getParentsWithWaterLists();
-                List<WaterAndParent> waterAndParentList = dao.getWatersAndParent();
+//                List<ParentWithWaters> list = dao.getParentsWithWaterLists();
+//                List<WaterAndParent> waterAndParentList = dao.getWatersAndParent();
             });
 
         }

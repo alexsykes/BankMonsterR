@@ -1,13 +1,12 @@
 package com.alexsykes.bankmonsterr.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.alexsykes.bankmonsterr.R;
 import com.alexsykes.bankmonsterr.data.Marker;
@@ -39,9 +38,7 @@ public class WaterDetailActivity extends AppCompatActivity {
     }
 
     void getMarkers() {
-        markerViewModel.setWater_id(water_id);
-        // LiveData<List<Marker>> markerListForWater = markerViewModel.getMarkerListForWater(water_id);
         List<Marker> markerList = markerViewModel.getMarkerList(water_id);
-        Log.i("Info", "getMarkers: " + markerList.size());
+//        Log.i("Info", "getMarkers: " + markerList.size());
     }
 }

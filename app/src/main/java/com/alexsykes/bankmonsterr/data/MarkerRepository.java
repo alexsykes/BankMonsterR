@@ -10,12 +10,10 @@ public class MarkerRepository {
     private final MarkerDao dao;
     private final LiveData<List<Marker>> allMarkers;
     private final LiveData<List<Marker>> markersForWater;
-    // private final List<Marker> markerList;
     int water_id;
 
     MarkerRepository(Application application) {
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(application);
-
         dao = db.dao();
         allMarkers = dao.getAllMarkers();
         markersForWater = dao.getAllMarkersForWater(water_id);
@@ -39,7 +37,6 @@ public class MarkerRepository {
     }
 
     public List<Marker> getMarkerList(int water_id) {
-        List<Marker>  markerList = dao.getAllMarkerList(water_id);
-        return markerList;
+        return dao.getAllMarkerList(water_id);
     }
 }

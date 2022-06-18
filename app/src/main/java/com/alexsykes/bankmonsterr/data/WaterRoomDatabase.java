@@ -29,6 +29,7 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     WaterRoomDatabase.class, "water_database")
                             .addCallback(roomDatabaseCallback)
+                            .allowMainThreadQueries()
                             .build();
                 }
             }

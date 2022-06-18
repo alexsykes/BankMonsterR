@@ -10,17 +10,23 @@ public class MarkerRepository {
     private final MarkerDao dao;
     private final LiveData<List<Marker>> allMarkers;
     private final LiveData<List<Marker>> markersForWater;
-    int water_id = 9;
+    private final List<Marker> markerList;
+    int water_id;
 
     MarkerRepository(Application application) {
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(application);
         dao = db.dao();
         allMarkers = dao.getAllMarkers();
         markersForWater = dao.getAllMarkersForWater(water_id);
+        markerList = dao.getAllMarkerList(water_id);
     }
 
     LiveData<List<Marker>> getAllMarkers() {
         return allMarkers;
+    }
+
+    public void setWater_id(int water_id) {
+        this.water_id = water_id;
     }
 
     void insert(Marker marker) {
@@ -30,5 +36,8 @@ public class MarkerRepository {
     }
 
     public LiveData<List<Marker>> getAllMarkersForWater(int water_id) { return markersForWater;
+    }
+
+    public List<Marker> getMarkerList(int water_id) { return markerList;
     }
 }

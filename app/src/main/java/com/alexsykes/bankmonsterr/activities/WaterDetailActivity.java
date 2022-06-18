@@ -38,6 +38,8 @@ public class WaterDetailActivity extends AppCompatActivity {
 
     void getMarkers() {
         MarkerViewModel markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        LiveData<List<Marker>> markerList = markerViewModel.getMarkerListForWater(water_id);
+        markerViewModel.setWater_id(water_id);
+        LiveData<List<Marker>> markerListForWater = markerViewModel.getMarkerListForWater(water_id);
+        List<Marker> markerList = markerViewModel.getMarkerList(water_id);
     }
 }

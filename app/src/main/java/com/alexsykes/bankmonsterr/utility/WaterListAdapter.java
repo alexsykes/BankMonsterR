@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.alexsykes.bankmonsterr.data.Water;
-import com.alexsykes.bankmonsterr.data.WaterAndParent;
 import com.alexsykes.bankmonsterr.data.WaterAndParents;
 
 public class WaterListAdapter extends ListAdapter<WaterAndParents, WaterViewHolder> {
@@ -20,6 +19,7 @@ public class WaterListAdapter extends ListAdapter<WaterAndParents, WaterViewHold
     }
 
 
+    @NonNull
     @Override
     public WaterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return WaterViewHolder.create(parent);
@@ -28,11 +28,8 @@ public class WaterListAdapter extends ListAdapter<WaterAndParents, WaterViewHold
     @Override
     public void onBindViewHolder(@NonNull WaterViewHolder holder, int position) {
         WaterAndParents current = getItem(position);
-        holder.bind(current, new OnItemClickListener() {
-            @Override
-            public void onItemClick(Water water) {
+        holder.bind(current, water -> {
 
-            }
         });
     }
     public interface OnItemClickListener {

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.bankmonsterr.R;
 import com.alexsykes.bankmonsterr.activities.MainActivity;
-import com.alexsykes.bankmonsterr.data.Water;
 import com.alexsykes.bankmonsterr.data.WaterAndParents;
 
 public class WaterViewHolder extends RecyclerView.ViewHolder {
@@ -28,12 +27,10 @@ public class WaterViewHolder extends RecyclerView.ViewHolder {
         parentViewItem.setText(current.getParent());
         int water_id = current.getWater_id();
         Log.i("Info", "bind: " + water_id);
-       // parentViewItem.setText(String.valueOf(current.getParent_id()));
-//        itemView.setOnClickListener(v -> {
-//            String id = current.getWater();
-//            Context context = itemView.getContext();
-//            ((MainActivity) context).onClickCalled(id);
-//        });
+        itemView.setOnClickListener(v -> {
+            Context context = itemView.getContext();
+            ((MainActivity) context).onClickCalled(water_id);
+        });
     }
 
     static WaterViewHolder create(ViewGroup parent) {

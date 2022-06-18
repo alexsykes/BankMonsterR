@@ -7,10 +7,10 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 class WaterRepository {
-    private AllDao dao;
-    private LiveData<List<Water>> allWaters;
-    private LiveData<List<Water>> riverList;
-    private LiveData<List<WaterAndParents>> waterAndParentList;
+    private final AllDao dao;
+    private final LiveData<List<Water>> allWaters;
+    private final LiveData<List<Water>> riverList;
+    private final LiveData<List<WaterAndParents>> waterAndParentList;
 
     WaterRepository(Application application) {
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(application);

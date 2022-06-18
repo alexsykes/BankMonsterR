@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class WaterViewModel extends AndroidViewModel {
-    private WaterRepository waterRepositry;
+    private final WaterRepository waterRepositry;
 
     private final LiveData<List<Water>> allWaters;
     private final LiveData<List<Water>> riverList;

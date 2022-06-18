@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class ParentRepository {
-    private AllDao dao;
-    private LiveData<List<Parent>> allParents;
+    private final AllDao dao;
+    private final LiveData<List<Parent>> allParents;
 
     ParentRepository(Application application) {
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(application);

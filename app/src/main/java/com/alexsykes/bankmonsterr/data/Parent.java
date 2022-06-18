@@ -15,8 +15,8 @@ public class Parent {
     }
 
     @NonNull
-    private String name;
-    private String category;
+    private final String name;
+    private final String category;
 
     public Parent(@NonNull String name, @NonNull String category){
         this.category = category;

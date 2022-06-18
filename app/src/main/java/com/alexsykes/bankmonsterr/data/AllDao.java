@@ -5,7 +5,6 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Transaction;
 
 import java.util.List;
 
@@ -30,10 +29,6 @@ public interface AllDao {
     @Query("DELETE FROM parents")
     void deleteAllParents();
 
-    @Transaction
-    @Query("SELECT * FROM parents")
-    List<ParentWithWaters> getParentsWithWaterLists();
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertWater(Water water);
 
@@ -47,9 +42,6 @@ public interface AllDao {
             " WHERE type LIKE :category " +
             "ORDER by name ASC ")
     LiveData<List<Water>> getAllWatersList(String category);
-    @Transaction
-    @Query("SELECT * FROM waters")
-    List<WaterAndParent> getWatersAndParent();
 
     @Query("SELECT waters.water_id, waters.name AS water, parents.name AS parent " +
             "FROM waters, parents " +

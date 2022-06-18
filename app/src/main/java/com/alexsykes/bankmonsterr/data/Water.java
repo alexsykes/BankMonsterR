@@ -18,7 +18,6 @@ public class Water {
     @NonNull
     private String name, type;
 
-    @NonNull
     private int parent_id;
 
     public int getWater_id() {

@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class MarkerViewModel extends AndroidViewModel {
-    private MarkerRepository markerRepository;
+    private final MarkerRepository markerRepository;
 
     private final LiveData<List<Marker>> allMarkers;
 

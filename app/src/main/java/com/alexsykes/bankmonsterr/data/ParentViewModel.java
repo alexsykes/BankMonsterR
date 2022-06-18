@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class ParentViewModel extends AndroidViewModel {
-    private ParentRepository parentRepository;
+    private final ParentRepository parentRepository;
 
     private final LiveData<List<Parent>> allParents;
 

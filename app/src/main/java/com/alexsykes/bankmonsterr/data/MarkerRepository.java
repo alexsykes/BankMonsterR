@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class MarkerRepository {
-    private AllDao dao;
-    private LiveData<List<Marker>> allMarkers;
+    private final AllDao dao;
+    private final LiveData<List<Marker>> allMarkers;
 
     MarkerRepository(Application application) {
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(application);

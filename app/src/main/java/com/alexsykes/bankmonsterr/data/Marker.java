@@ -22,7 +22,6 @@ public class Marker {
     @NonNull
     private String name, code, type;
 
-    @NonNull
     private double lat, lng;
 
     public Marker(@NonNull String name, @NonNull String code, @NonNull String type, double lat, double lng) {

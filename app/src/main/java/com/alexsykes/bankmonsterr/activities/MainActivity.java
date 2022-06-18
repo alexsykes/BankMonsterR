@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.alexsykes.bankmonsterr.R;
-import com.alexsykes.bankmonsterr.data.Water;
 import com.alexsykes.bankmonsterr.data.WaterAndParents;
 import com.alexsykes.bankmonsterr.data.WaterViewModel;
 import com.alexsykes.bankmonsterr.utility.WaterListAdapter;
@@ -26,7 +25,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
-    private WaterViewModel waterViewModel;
     public static final int NEW_WATER_ACTIVITY_REQUEST_CODE = 1;
     BottomNavigationView bottomNavigationView;
 
@@ -44,16 +42,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        waterViewModel = new ViewModelProvider(this).get(WaterViewModel.class);
+        WaterViewModel waterViewModel = new ViewModelProvider(this).get(WaterViewModel.class);
         LiveData<List<WaterAndParents>> waterandparents = waterViewModel.getWaterAndParentList();
-;
-        waterandparents.observe(this, w -> {
-            adapter.submitList(w);
-        });
-
-//        waterList.observe(this, waters -> {
-//            adapter.submitList(waters);
-//        });
+        waterandparents.observe(this, adapter::submitList);
     }
 
     public void onClickCalled(int id) {

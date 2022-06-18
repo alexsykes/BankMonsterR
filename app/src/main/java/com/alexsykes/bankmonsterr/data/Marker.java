@@ -7,8 +7,30 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "markers")
 public class Marker {
 
+    public void setMarker_id(int marker_id) {
+        this.marker_id = marker_id;
+    }
+
     @PrimaryKey(autoGenerate = true)
     private int marker_id;
+
+    @NonNull
+    private String  code, type;
+    private int water_id;
+    private double lat, lng;
+
+    public int getMarker_id() {
+        return marker_id;
+    }
+
+    public Marker(@NonNull String code, @NonNull String type, int water_id, double lat, double lng) {
+        this.code = code;
+        this.type = type;
+        this.water_id = water_id;
+        this.lat = lat;
+        this.lng = lng;
+    }
+
 
     @NonNull
     public String getCode() {
@@ -18,26 +40,21 @@ public class Marker {
     public void setCode(@NonNull String code) {
         this.code = code;
     }
-
     @NonNull
-    private String name, code, type;
+    public String getType() {
+        return type;
+    }
 
-    private double lat, lng;
-
-    public Marker(@NonNull String name, @NonNull String code, @NonNull String type, double lat, double lng) {
-        this.name = name;
-        this.code = code;
+    public void setType(@NonNull String type) {
         this.type = type;
-        this.lat = lat;
-        this.lng = lng;
     }
 
-    public int getMarker_id() {
-        return marker_id;
+    public int getWater_id() {
+        return water_id;
     }
 
-    public void setMarker_id(int marker_id) {
-        this.marker_id = marker_id;
+    public void setWater_id(int water_id) {
+        this.water_id = water_id;
     }
 
     public double getLat() {
@@ -54,23 +71,5 @@ public class Marker {
 
     public void setLng(double lng) {
         this.lng = lng;
-    }
-
-    @NonNull
-    public String getType() {
-        return type;
-    }
-
-    public void setType(@NonNull String type) {
-        this.type = type;
-    }
-
-    @NonNull
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(@NonNull String name) {
-        this.name = name;
     }
 }

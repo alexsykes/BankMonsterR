@@ -7,17 +7,17 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 class WaterRepository {
-    private final AllDao dao;
+    private final WaterDao waterDao;
     private final LiveData<List<Water>> allWaters;
     private final LiveData<List<Water>> riverList;
     private final LiveData<List<WaterAndParents>> waterAndParentList;
 
     WaterRepository(Application application) {
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(application);
-        dao = db.dao();
-        allWaters = dao.getAllWaters();
-        riverList = dao.getAllWatersList("Canal");
-        waterAndParentList = dao.WaterAndParentList();
+        waterDao = db.wdao();
+        allWaters = waterDao.getAllWaters();
+        riverList = waterDao.getAllWatersList("Canal");
+        waterAndParentList = waterDao.WaterAndParentList();
     }
 
     LiveData<List<Water>> getAllWaters() {
@@ -32,7 +32,7 @@ class WaterRepository {
 
     void insert(Water water) {
         WaterRoomDatabase.databaseWriteExecutor.execute(() -> {
-            dao.insertWater(water);
+            waterDao.insertWater(water);
         });
     }
 }

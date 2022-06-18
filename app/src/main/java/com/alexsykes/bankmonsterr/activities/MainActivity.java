@@ -47,10 +47,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         waterandparents.observe(this, adapter::submitList);
     }
 
-    public void onClickCalled(int id) {
+    public void onClickCalled(int id, String water_name) {
         // Check for connectivity
-            Intent intent = new Intent(MainActivity.this, NewWaterActivity.class);
+            Intent intent = new Intent(MainActivity.this, WaterDetailActivity.class);
             intent.putExtra("water_id", id);
+            intent.putExtra("water_name",water_name);
             startActivity(intent);
     }
 

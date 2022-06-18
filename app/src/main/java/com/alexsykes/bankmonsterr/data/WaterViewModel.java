@@ -35,4 +35,5 @@ public class WaterViewModel extends AndroidViewModel {
     public void insert(Water water) {
         waterRepositry.insert(water);
     }
+
 }

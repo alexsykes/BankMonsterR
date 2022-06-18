@@ -9,26 +9,7 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface AllDao {
-    // Marker Dao
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMarker(Marker marker);
-
-    @Query("DELETE FROM markers")
-    void deleteAllMarkers();
-
-    @Query("SELECT * FROM markers ORDER by name ASC")
-    LiveData<List<Marker>> getAllMarkers();
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertParent(Parent parent);
-
-    @Query("SELECT * FROM parents ORDER by name ASC")
-    LiveData<List<Parent>> getAllParents();
-
-    @Query("DELETE FROM parents")
-    void deleteAllParents();
-
+public interface WaterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertWater(Water water);
 
@@ -48,10 +29,4 @@ public interface AllDao {
             "WHERE waters.parent_id = parents.parent_id " +
             "ORDER BY parent, water ASC")
     LiveData<List<WaterAndParents>> WaterAndParentList();
-
 }
-
-
-
-
-

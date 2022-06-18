@@ -23,13 +23,14 @@ public class WaterViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(WaterAndParents current, final WaterListAdapter.OnItemClickListener listener) {
-        waterViewItem.setText(current.getWater());
+        String water_name = current.getWater();
+        waterViewItem.setText(water_name);
         parentViewItem.setText(current.getParent());
         int water_id = current.getWater_id();
-        Log.i("Info", "bind: " + water_id);
+        // Log.i("Info", "bind: " + water_id);
         itemView.setOnClickListener(v -> {
             Context context = itemView.getContext();
-            ((MainActivity) context).onClickCalled(water_id);
+            ((MainActivity) context).onClickCalled(water_id, water_name);
         });
     }
 

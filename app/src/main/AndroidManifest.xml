@@ -18,7 +18,7 @@
             android:parentActivityName=".activities.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.NewWaterActivity"
+            android:name=".activities.WaterDetailActivity"
             android:exported="false"
             android:parentActivityName=".activities.MainActivity" />
         <activity

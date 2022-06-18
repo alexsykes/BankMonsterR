@@ -146,7 +146,6 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 marker= new Marker("CP2","Car park",5, -2.101327, 53.982948);
                 dao.insertMarker(marker);
             });
-
         }
     };
 }

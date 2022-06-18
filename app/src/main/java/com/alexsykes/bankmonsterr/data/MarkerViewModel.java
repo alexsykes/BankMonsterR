@@ -41,6 +41,8 @@ public class MarkerViewModel extends AndroidViewModel {
         this.water_id = water_id;
     }
 
-    public List<Marker> getMarkerList(int water_id) { return markerList;
+    public List<Marker> getMarkerList(int water_id) {
+        markerList = markerRepository.getMarkerList(water_id);
+        return markerList;
     }
 }

@@ -22,11 +22,13 @@ public class WaterDetailActivity extends AppCompatActivity {
     private EditText editWaterView;
     int water_id;
     String water_name;
+    MarkerViewModel markerViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_detail);
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
 
         Intent intent = getIntent();
         water_id = intent.getIntExtra("water_id",-999);
@@ -37,9 +39,9 @@ public class WaterDetailActivity extends AppCompatActivity {
     }
 
     void getMarkers() {
-        MarkerViewModel markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         markerViewModel.setWater_id(water_id);
-        LiveData<List<Marker>> markerListForWater = markerViewModel.getMarkerListForWater(water_id);
+        // LiveData<List<Marker>> markerListForWater = markerViewModel.getMarkerListForWater(water_id);
         List<Marker> markerList = markerViewModel.getMarkerList(water_id);
+        Log.i("Info", "getMarkers: " + markerList.size());
     }
 }

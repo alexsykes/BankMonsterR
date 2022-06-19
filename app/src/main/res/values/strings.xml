@@ -7,4 +7,5 @@
     <string name="settings">Settings</string>
     <string name="rivers">Rivers</string>
     <string name="waters">Waters</string>
+    <string name="location_map">Location map</string>
 </resources>

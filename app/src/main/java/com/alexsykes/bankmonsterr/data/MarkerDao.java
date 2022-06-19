@@ -23,11 +23,6 @@ public interface MarkerDao {
     @Query("SELECT * FROM markers WHERE water_id = :water_id")
     LiveData<List<Marker>> getAllMarkersForWater(int water_id);
 
-    @Query("SELECT * FROM markers WHERE water_id = :water_id")
+    @Query("SELECT * FROM markers WHERE water_id = :water_id ORDER BY code ASC")
     List<Marker> getAllMarkerList(int water_id);
 }
-
-
-
-
-

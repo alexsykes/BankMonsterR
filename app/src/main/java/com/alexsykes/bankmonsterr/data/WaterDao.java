@@ -27,6 +27,6 @@ public interface WaterDao {
     @Query("SELECT waters.water_id, waters.name AS water, parents.name AS parent " +
             "FROM waters, parents " +
             "WHERE waters.parent_id = parents.parent_id " +
-            "ORDER BY parent, water ASC")
+            "ORDER BY water ASC")
     LiveData<List<WaterAndParents>> WaterAndParentList();
 }

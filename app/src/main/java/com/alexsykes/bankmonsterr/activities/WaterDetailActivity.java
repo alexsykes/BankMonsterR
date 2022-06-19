@@ -16,7 +16,6 @@ import com.alexsykes.bankmonsterr.R;
 import com.alexsykes.bankmonsterr.data.Marker;
 import com.alexsykes.bankmonsterr.data.MarkerViewModel;
 import com.alexsykes.bankmonsterr.utility.MarkerListAdapter;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,7 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
-public class WaterDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class WaterDetailActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
 
     public static final String EXTRA_REPLY = "REPLY";
 
@@ -56,7 +55,6 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
         width = (int) (0.6 * displayMetrics.widthPixels);
 
 
-
         getMarkers();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -74,13 +72,20 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
+    public void onMapLoaded() {
+        //  mMap.resetMinMaxZoomPreference();
+        Log.i("Info", "onMapLoaded: ");
+    }
+
+    @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-         mMap.setMaxZoomPreference(15);
+        mMap.setOnMapLoadedCallback(this);
+        mMap.setMaxZoomPreference(15);
 
 //        height = findViewById(R.id.map).getHeight();
 //        width = findViewById(R.id.map).getWidth();
-        if(!markerList.isEmpty()){
+        if (!markerList.isEmpty()) {
             LatLng latLng;
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 40;

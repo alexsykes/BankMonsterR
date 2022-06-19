@@ -23,7 +23,7 @@ public class Marker {
         return marker_id;
     }
 
-    public Marker(@NonNull String code, @NonNull String type, int water_id, double lat, double lng) {
+    public Marker(@NonNull String code, @NonNull String type, int water_id, double lng, double lat) {
         this.code = code;
         this.type = type;
         this.water_id = water_id;

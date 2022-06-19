@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BankMonsterR"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBlP1oQiomD7qo-ujVf0uSK2nOl-0X1WC0" />
         <activity
             android:name=".activities.AllWatersActivity"
             android:parentActivityName=".activities.MainActivity"

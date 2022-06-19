@@ -76,7 +76,7 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 wdao.insertWater(water);
                 water = new Water("Appletreewick","River", 2);
                 wdao.insertWater(water);
-                water = new Water("Gargrave/Brought","River", 1);
+                water = new Water("Gargrave/Broughton","River", 1);
                 wdao.insertWater(water);
                 water = new Water("Funkirk/Niffany Farms","River", 1);
                 wdao.insertWater(water);
@@ -129,7 +129,7 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 water = new Water("Skirbeck","River", 9);
                 wdao.insertWater(water);
 
-                Marker marker= new Marker("CP","Car park",30, -2.28000, 54.03128);
+                Marker marker= new Marker("CP","Car park",30, -2.28007, 54.03128);
                 dao.insertMarker(marker);
                 marker= new Marker("LBUS","Limit",30, -2.28592, 54.03171);
                 dao.insertMarker(marker);

@@ -26,8 +26,3 @@ public interface MarkerDao {
     @Query("SELECT * FROM markers WHERE water_id = :water_id ORDER BY code ASC")
     List<Marker> getAllMarkerList(int water_id);
 }
-
-
-
-
-

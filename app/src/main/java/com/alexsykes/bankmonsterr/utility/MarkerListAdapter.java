@@ -69,7 +69,6 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
             typeTextView.setText(current.getType());
             lngTextView.setText(lngStr);
             latTextView.setText(latStr);
-
         }
     }
 }

@@ -2,6 +2,7 @@ package com.alexsykes.bankmonsterr.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.EditText;
 
@@ -15,11 +16,13 @@ import com.alexsykes.bankmonsterr.R;
 import com.alexsykes.bankmonsterr.data.Marker;
 import com.alexsykes.bankmonsterr.data.MarkerViewModel;
 import com.alexsykes.bankmonsterr.utility.MarkerListAdapter;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
@@ -31,6 +34,7 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
     private GoogleMap mMap;
     private EditText editWaterView;
     int water_id;
+    int height, width;
     String water_name;
     MarkerViewModel markerViewModel;
     List<Marker> markerList;
@@ -45,6 +49,14 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
         water_id = intent.getIntExtra("water_id", -999);
         water_name = intent.getStringExtra("water_name");
         setTitle(water_name);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        height = (int) (0.6 * displayMetrics.heightPixels);
+        width = (int) (0.6 * displayMetrics.widthPixels);
+
+
+
         getMarkers();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -64,20 +76,26 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng latLng = null;
-        String code;
 
-        for(Marker marker: markerList) {
-            latLng = new LatLng(marker.getLat(), marker.getLng());
-            code = marker.getCode();
-            mMap.addMarker(new MarkerOptions().position(latLng).title(code));
-        }
+//        height = findViewById(R.id.map).getHeight();
+//        width = findViewById(R.id.map).getWidth();
+        if(!markerList.isEmpty()){
+            LatLng latLng;
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            int padding = 40;
+            String code;
 
-        // Add a marker in Sydney and move the camera
-  //      LatLng home = new LatLng(53.5946, -2.561);
- //       mMap.addMarker(new MarkerOptions().position(home).title("Home"));
-        if(latLng != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
+            for(Marker marker: markerList) {
+                latLng = new LatLng(marker.getLat(), marker.getLng());
+                builder.include(latLng);
+                code = marker.getCode();
+                mMap.addMarker(new MarkerOptions().position(latLng).title(code));
+            }
+
+            LatLngBounds bounds  =
+                    builder.build();
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,width,height, padding));
         }
     }
 }

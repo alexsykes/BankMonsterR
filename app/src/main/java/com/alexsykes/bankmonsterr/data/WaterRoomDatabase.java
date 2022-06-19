@@ -126,14 +126,14 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 wdao.insertWater(water);
                 water = new Water("Esholt","Canal", 7);
                 wdao.insertWater(water);
-                water = new Water("Skirbeck","River", 7);
+                water = new Water("Skirbeck","River", 9);
                 wdao.insertWater(water);
 
-                Marker marker= new Marker("CP","Car park",9, -2.28000, 54.03128);
+                Marker marker= new Marker("CP","Car park",30, -2.28000, 54.03128);
                 dao.insertMarker(marker);
-                marker= new Marker("LBUS","Limit",9, -2.28592, 54.03171);
+                marker= new Marker("LBUS","Limit",30, -2.28592, 54.03171);
                 dao.insertMarker(marker);
-                marker= new Marker("LBDS","Limit",9, -2.27716, 54.02494);
+                marker= new Marker("LBDS","Limit",30, -2.27716, 54.02494);
                 dao.insertMarker(marker);
                 marker= new Marker("CP","Car park",2, -1.76057, 53.91984);
                 dao.insertMarker(marker);

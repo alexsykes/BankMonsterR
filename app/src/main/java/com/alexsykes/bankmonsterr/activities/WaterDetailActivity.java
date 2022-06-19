@@ -33,9 +33,6 @@ public class WaterDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_water_detail);
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         RecyclerView rv = findViewById(R.id.markerRecyclerView);
-        final MarkerListAdapter adapter = new MarkerListAdapter();
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(new LinearLayoutManager(this));
         Intent intent = getIntent();
         water_id = intent.getIntExtra("water_id", -999);
         water_name = intent.getStringExtra("water_name");
@@ -47,5 +44,10 @@ public class WaterDetailActivity extends AppCompatActivity {
     void getMarkers() {
         markerList = markerViewModel.getMarkerList(water_id);
 //        Log.i("Info", "getMarkers: " + markerList.size());
+
+        RecyclerView rv = findViewById(R.id.markerRecyclerView);
+        final MarkerListAdapter adapter = new MarkerListAdapter(markerList);
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(this));
     }
 }

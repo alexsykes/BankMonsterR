@@ -76,6 +76,7 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+         mMap.setMaxZoomPreference(15);
 
 //        height = findViewById(R.id.map).getHeight();
 //        width = findViewById(R.id.map).getWidth();

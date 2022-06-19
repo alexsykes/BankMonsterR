@@ -129,21 +129,48 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 water = new Water("Skirbeck","River", 9);
                 wdao.insertWater(water);
 
-                Marker marker= new Marker("CP","Car park",30, -2.28007, 54.03128);
+
+                // Buckden
+                Marker marker= new Marker("CP","Car park",1, -2.089700,   54.191975);
                 dao.insertMarker(marker);
-                marker= new Marker("LBUS","Limit",30, -2.28592, 54.03171);
+
+                // Hubberholme
+                marker= new Marker("CP","Car park",3, -2.113885, 54.199842);
+                dao.insertMarker(marker);
+
+                // Appletreewick
+                marker= new Marker("CP","Car park",4, -1.929755, 54.037724);
+                dao.insertMarker(marker);
+
+
+                // Skirbeck
+                 marker= new Marker("CP","Car park",30, -2.28007, 54.03128);
+                dao.insertMarker(marker);
+                marker= new Marker("LBUS","Limit",30, -2.28592, 54.03171); // Skirbeck
                 dao.insertMarker(marker);
                 marker= new Marker("LBDS","Limit",30, -2.27716, 54.02494);
                 dao.insertMarker(marker);
+
+                // Burley
                 marker= new Marker("CP","Car park",2, -1.76057, 53.91984);
                 dao.insertMarker(marker);
                 marker= new Marker("RBDS","Limit",2, -1.75920, 53.92205);
                 dao.insertMarker(marker);
                 marker= new Marker("RBUS","Limit",2, -1.76784, 53.92357);
                 dao.insertMarker(marker);
-                marker= new Marker("CP1","Car park",5, -2.05971, 53.96105);
+
+                // Gargrave
+                marker= new Marker("CP1","Car park",5, -2.10640, 53.98305);
                 dao.insertMarker(marker);
-                marker= new Marker("CP2","Car park",5, -2.101327, 53.982948);
+                marker= new Marker("CP2","Car park",5, -2.05971, 53.96105);
+                dao.insertMarker(marker);
+                marker= new Marker("RBUS","Limit",5, -2.10443, 53.98260);
+                dao.insertMarker(marker);
+                marker= new Marker("RBDS","Limit",5, -2.06434, 53.96480);
+                dao.insertMarker(marker);
+                marker= new Marker("LBUS","Limit",5, -2.08204, 53.97757);
+                dao.insertMarker(marker);
+                marker= new Marker("LBDS","Limit",5, -2.05741, 53.95937);
                 dao.insertMarker(marker);
             });
         }

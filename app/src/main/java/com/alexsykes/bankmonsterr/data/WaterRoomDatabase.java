@@ -133,6 +133,26 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 // Buckden
                 Marker marker= new Marker("CP","Car park",1, -2.089700,   54.191975);
                 dao.insertMarker(marker);
+                marker= new Marker("RBUS","Buckden 1",1, -2.10315,   54.19753);
+                dao.insertMarker(marker);
+                marker= new Marker("RBDS","Buckden 1",1, -2.09683,   54.19540);
+                dao.insertMarker(marker);
+                marker= new Marker("LBUS","Buckden 2",1, -2.09766,   54.19672);
+                dao.insertMarker(marker);
+                marker= new Marker("LBDS","Buckden 2",1, -2.09527,   54.19300);
+                dao.insertMarker(marker);
+                marker= new Marker("RBUS","Buckden 3",1, -2.09556,   54.19100);
+                dao.insertMarker(marker);
+                marker= new Marker("RBDS","Buckden 3",1, -2.08542,   54.17877);
+                dao.insertMarker(marker);
+                marker= new Marker("LBUS","Buckden 4",1, -2.09347,   54.18750);
+                dao.insertMarker(marker);
+                marker= new Marker("LBDS","Buckden 4",1, -2.09290,   54.18644);
+                dao.insertMarker(marker);
+                marker= new Marker("RBDS","Buckden 5",1, -2.08333,   54.17602);
+                dao.insertMarker(marker);
+                marker= new Marker("RBUS","Buckden 5",1, -2.08465,   54.17738);
+                dao.insertMarker(marker);
 
                 // Hubberholme
                 marker= new Marker("CP","Car park",3, -2.113885, 54.199842);
@@ -140,6 +160,10 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
 
                 // Appletreewick
                 marker= new Marker("CP","Car park",4, -1.929755, 54.037724);
+                dao.insertMarker(marker);
+                marker= new Marker("LBUS","Appletreewick",4, -1.93441,   54.03894);
+                dao.insertMarker(marker);
+                marker= new Marker("LBDS","Appletreewick",4, -1.93075,   54.03671);
                 dao.insertMarker(marker);
 
 

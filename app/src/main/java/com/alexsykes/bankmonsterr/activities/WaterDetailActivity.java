@@ -73,8 +73,27 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onMapLoaded() {
-        //  mMap.resetMinMaxZoomPreference();
+          mMap.setMaxZoomPreference(15);
         Log.i("Info", "onMapLoaded: ");
+        if (!markerList.isEmpty()) {
+            LatLng latLng;
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            int padding = 100;
+            String code;
+
+            for (Marker marker : markerList) {
+                latLng = new LatLng(marker.getLat(), marker.getLng());
+                builder.include(latLng);
+                code = marker.getCode();
+            }
+
+            LatLngBounds bounds =
+                    builder.build();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, height, width, padding));
+            if(markerList.size() != 1) {
+                 mMap.resetMinMaxZoomPreference();
+            }
+        }
     }
 
     @Override
@@ -83,25 +102,17 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
         mMap.setOnMapLoadedCallback(this);
         mMap.setMaxZoomPreference(15);
 
-//        height = findViewById(R.id.map).getHeight();
-//        width = findViewById(R.id.map).getWidth();
+        LatLng latLng;
+
         if (!markerList.isEmpty()) {
-            LatLng latLng;
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            int padding = 40;
             String code;
 
             for(Marker marker: markerList) {
                 latLng = new LatLng(marker.getLat(), marker.getLng());
-                builder.include(latLng);
                 code = marker.getCode();
                 mMap.addMarker(new MarkerOptions().position(latLng).title(code));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
-
-            LatLngBounds bounds  =
-                    builder.build();
-
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,width,height, padding));
         }
     }
 }

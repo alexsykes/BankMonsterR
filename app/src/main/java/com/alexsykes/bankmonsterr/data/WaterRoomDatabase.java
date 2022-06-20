@@ -131,70 +131,82 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
 
 
                 // Buckden
-                Marker marker= new Marker("CP","Car park",1, -2.089700,   54.191975);
+                Marker marker = new Marker("Buckden", "CP","Car park",1, -2.089700,   54.191975);
                 dao.insertMarker(marker);
-                marker= new Marker("RBUS","Buckden 1",1, -2.10315,   54.19753);
+                marker = new Marker("Buckden 1", "RBUS","Limit",1, -2.10315,   54.19753);
                 dao.insertMarker(marker);
-                marker= new Marker("RBDS","Buckden 1",1, -2.09683,   54.19540);
+                marker = new Marker("Buckden 1", "RBDS","Limit",1, -2.09683,   54.19540);
                 dao.insertMarker(marker);
-                marker= new Marker("LBUS","Buckden 2",1, -2.09766,   54.19672);
+                marker = new Marker("Buckden 2", "LBUS","Limit",1, -2.09766,   54.19672);
                 dao.insertMarker(marker);
-                marker= new Marker("LBDS","Buckden 2",1, -2.09527,   54.19300);
+                marker = new Marker("Buckden 2", "LBDS","Limit",1, -2.09527,   54.19300);
                 dao.insertMarker(marker);
-                marker= new Marker("RBUS","Buckden 3",1, -2.09556,   54.19100);
+                marker = new Marker("Buckden 3", "RBUS","Limit",1, -2.09556,   54.19100);
                 dao.insertMarker(marker);
-                marker= new Marker("RBDS","Buckden 3",1, -2.08542,   54.17877);
+                marker = new Marker("Buckden 3", "RBDS","Limit",1, -2.08542,   54.17877);
                 dao.insertMarker(marker);
-                marker= new Marker("LBUS","Buckden 4",1, -2.09347,   54.18750);
+                marker = new Marker("Buckden 4", "LBUS","Limit",1, -2.09347,   54.18750);
                 dao.insertMarker(marker);
-                marker= new Marker("LBDS","Buckden 4",1, -2.09290,   54.18644);
+                marker = new Marker("Buckden 4", "LBDS","Limit",1, -2.09290,   54.18644);
                 dao.insertMarker(marker);
-                marker= new Marker("RBDS","Buckden 5",1, -2.08333,   54.17602);
+                marker = new Marker("Buckden 5", "RBDS","Limit",1, -2.08333,   54.17602);
                 dao.insertMarker(marker);
-                marker= new Marker("RBUS","Buckden 5",1, -2.08465,   54.17738);
+                marker = new Marker("Buckden 5", "RBUS","Limit",1, -2.08465,   54.17738);
                 dao.insertMarker(marker);
 
                 // Hubberholme
-                marker= new Marker("CP","Car park",3, -2.113885, 54.199842);
+                marker = new Marker("Hubberholme", "CP","Car park",3, -2.113885, 54.199842);
+                dao.insertMarker(marker);
+                marker = new Marker("Hubberholme 1", "RBUS","Limit",3, -2.130225, 54.20119);
+                dao.insertMarker(marker);
+                marker = new Marker("Hubberholme 1", "RBDS","Limit",3, -2.11663, 54.20068);
+                dao.insertMarker(marker);
+                marker = new Marker("Hubberholme 2", "LBUS","Limit",3, -2.12400, 54.20095);
+                dao.insertMarker(marker);
+                marker = new Marker("Hubberholme 2", "LBDS","Limit",3, -2.11556, 54.20019);
+                dao.insertMarker(marker);
+                marker = new Marker("Hubberholme 3", "LBUS","Limit",3, -2.11465, 54.19954);
+                dao.insertMarker(marker);
+                marker = new Marker("Hubberholme 3", "LBDS","Limit",3, -2.10430, 54.19873);
                 dao.insertMarker(marker);
 
                 // Appletreewick
-                marker= new Marker("CP","Car park",4, -1.929755, 54.037724);
+                marker = new Marker("Appletreewick", "CP","Car park",4, -1.929755, 54.037724);
                 dao.insertMarker(marker);
-                marker= new Marker("LBUS","Appletreewick",4, -1.93441,   54.03894);
+                marker = new Marker("Appletreewick", "LBUS","Limit",4, -1.93441,   54.03894);
                 dao.insertMarker(marker);
-                marker= new Marker("LBDS","Appletreewick",4, -1.93075,   54.03671);
+                marker = new Marker("Appletreewick", "LBDS","Limit",4, -1.93075,   54.03671);
                 dao.insertMarker(marker);
 
 
                 // Skirbeck
-                 marker= new Marker("CP","Car park",30, -2.28007, 54.03128);
+                marker = new Marker("", "CP","Car park",30, -2.28007, 54.03128);
                 dao.insertMarker(marker);
-                marker= new Marker("LBUS","Limit",30, -2.28592, 54.03171); // Skirbeck
+                marker = new Marker("Skirbeck", "LBUS","Limit",30, -2.28592, 54.03171); // Skirbeck
                 dao.insertMarker(marker);
-                marker= new Marker("LBDS","Limit",30, -2.27716, 54.02494);
+                marker = new Marker("Skirbeck", "LBDS","Limit",30, -2.27716, 54.02494);
                 dao.insertMarker(marker);
 
                 // Burley
-                marker= new Marker("CP","Car park",2, -1.76057, 53.91984);
+                marker = new Marker("Burley", "CP","Car park",2, -1.76057, 53.91984);
                 dao.insertMarker(marker);
-                marker= new Marker("RBDS","Limit",2, -1.75920, 53.92205);
+                marker = new Marker("Burley", "RBDS","Limit",2, -1.75920, 53.92205);
                 dao.insertMarker(marker);
-                marker= new Marker("RBUS","Limit",2, -1.76784, 53.92357);
+                marker = new Marker("Burley", "RBUS","Limit",2, -1.76784, 53.92357);
                 dao.insertMarker(marker);
 
                 // Gargrave
-                marker= new Marker("CP1","Car park",5, -2.10640, 53.98305);
+                marker = new Marker("Gargrave", "CP1","Car park",5, -2.10640, 53.98305);
                 dao.insertMarker(marker);
-                marker= new Marker("CP2","Car park",5, -2.05971, 53.96105);
+                marker = new Marker("Gargrave", "CP2","Car park",5, -2.05971, 53.96105);
                 dao.insertMarker(marker);
-                marker= new Marker("RBUS","Limit",5, -2.10443, 53.98260);
+                marker = new Marker("Gargrave 1", "RBUS","Limit",5, -2.10443, 53.98260);
                 dao.insertMarker(marker);
-                marker= new Marker("RBDS","Limit",5, -2.06434, 53.96480);
+                marker = new Marker("Gargrave 1", "RBDS","Limit",5, -2.06434, 53.96480);
                 dao.insertMarker(marker);
-                marker= new Marker("LBUS","Limit",5, -2.08204, 53.97757);
+                marker = new Marker("Gargrave 2", "LBUS","Limit",5, -2.08204, 53.97757);
                 dao.insertMarker(marker);
-                marker= new Marker("LBDS","Limit",5, -2.05741, 53.95937);
+                marker = new Marker("Gargrave 2", "LBDS","Limit",5, -2.05741, 53.95937);
                 dao.insertMarker(marker);
             });
         }

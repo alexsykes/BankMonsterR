@@ -15,7 +15,12 @@ public class Marker {
     private int marker_id;
 
     @NonNull
-    private String  code, type;
+    public String getName() {
+        return name;
+    }
+
+    @NonNull
+    private String  name, code, type;
     private int water_id;
     private double lat, lng;
 
@@ -23,12 +28,13 @@ public class Marker {
         return marker_id;
     }
 
-    public Marker(@NonNull String code, @NonNull String type, int water_id, double lng, double lat) {
+    public Marker(@NonNull String name, String code, @NonNull String type, int water_id, double lng, double lat) {
         this.code = code;
         this.type = type;
         this.water_id = water_id;
         this.lat = lat;
         this.lng = lng;
+        this.name = name;
     }
 
 

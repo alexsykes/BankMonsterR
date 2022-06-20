@@ -47,12 +47,12 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
 
 
      static class MarkerViewHolder extends RecyclerView.ViewHolder {
-        private final TextView typeTextView, codeTextView, latTextView, lngTextView;
+        private final TextView nameTextView, typeTextView, latTextView, lngTextView;
 
         public MarkerViewHolder(@NonNull  View view) {
             super(view);
+            nameTextView = view.findViewById(R.id.nameTextView);
             typeTextView = view.findViewById(R.id.typeTextView);
-            codeTextView = view.findViewById(R.id.codeTextView);
             latTextView = view.findViewById(R.id.latTextView);
             lngTextView = view.findViewById(R.id.lngTextView);
         }
@@ -65,7 +65,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
             lngStr = myFormatter.format(current.getLng());
             latStr = myFormatter.format(current.getLat());
 
-            codeTextView.setText(current.getCode());
+            nameTextView.setText(current.getName() + " " + current.getCode());
             typeTextView.setText(current.getType());
             lngTextView.setText(lngStr);
             latTextView.setText(latStr);

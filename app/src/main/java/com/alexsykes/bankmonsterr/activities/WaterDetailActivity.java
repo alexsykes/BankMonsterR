@@ -73,7 +73,7 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onMapLoaded() {
-          mMap.setMaxZoomPreference(15);
+         // mMap.setMaxZoomPreference(15);
         Log.i("Info", "onMapLoaded: ");
         if (!markerList.isEmpty()) {
             LatLng latLng;
@@ -89,9 +89,9 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
 
             LatLngBounds bounds =
                     builder.build();
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, height, width, padding));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
             if(markerList.size() != 1) {
-                 mMap.resetMinMaxZoomPreference();
+                // mMap.resetMinMaxZoomPreference();
             }
         }
     }
@@ -100,8 +100,8 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setOnMapLoadedCallback(this);
-        mMap.setMaxZoomPreference(15);
-
+        // mMap.setMaxZoomPreference(15);
+        String marker_title;
         LatLng latLng;
 
         if (!markerList.isEmpty()) {
@@ -110,7 +110,8 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
             for(Marker marker: markerList) {
                 latLng = new LatLng(marker.getLat(), marker.getLng());
                 code = marker.getCode();
-                mMap.addMarker(new MarkerOptions().position(latLng).title(code));
+                marker_title = marker.getName() + " " + code;
+                mMap.addMarker(new MarkerOptions().position(latLng).title(marker_title));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         }

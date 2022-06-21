@@ -36,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -94,18 +95,35 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private void addDataToDb(String response) {
+        JSONArray waters = new JSONArray();
+        JSONArray markers = new JSONArray();
+        JSONArray parents = new JSONArray();
         try {
             JSONArray jsonArray = new JSONArray(response);
 
             Log.i("Info", "JSONArray: " + jsonArray.length());
-            JSONArray waters = jsonArray.getJSONArray(0);
+            waters = jsonArray.getJSONArray(0);
             Log.i("Info", "Waters: " + waters.length());
-            JSONArray markers = jsonArray.getJSONArray(1);
+            markers = jsonArray.getJSONArray(1);
             Log.i("Info", "Markers: " + markers.length());
-            JSONArray parents = jsonArray.getJSONArray(2);
+            parents = jsonArray.getJSONArray(2);
             Log.i("Info", "Parents: " + parents.length());
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+
+        for(int index = 0; index < waters.length(); index ++) {
+            try {
+                JSONObject theWater = new JSONObject(waters.get(index).toString());
+                String name = theWater.getString("name");
+                String type = theWater.getString("type");
+                int parent_id = theWater.getInt("parent_id");
+
+                Log.i("Info", "addDataToDb: " +  name + " " + type + " " + parent_id);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -142,8 +160,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
         return false;
     }
-
-
 
     private void goSettings() {
         Log.i("Info", "goSettings: ");

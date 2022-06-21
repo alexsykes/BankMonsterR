@@ -102,18 +102,6 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
                 wdao.insertWater(water);
                 water = new Water("Lower Dunsforth","River", 3);
                 wdao.insertWater(water);
-                water = new Water("Aysgarth 1","River", 3);
-                wdao.insertWater(water);
-                water = new Water("Aysgarth 2","River", 3);
-                wdao.insertWater(water);
-                water = new Water("Aysgarth 3","River", 3);
-                wdao.insertWater(water);
-                water = new Water("Langthorpe/Roecliffe 1","River", 3);
-                wdao.insertWater(water);
-                water = new Water("Langthorpe/Roecliffe 2","River", 3);
-                wdao.insertWater(water);
-                water = new Water("Lower Dunsforth","River", 3);
-                wdao.insertWater(water);
                 water = new Water("Oakworth Lakes","Lake", 8);
                 wdao.insertWater(water);
                 water = new Water("Staveley Lakes","Lake", 8);

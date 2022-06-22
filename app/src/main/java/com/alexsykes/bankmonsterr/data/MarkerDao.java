@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface MarkerDao {
     // Marker Dao
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertMarker(Marker marker);
 
     @Query("DELETE FROM markers")

@@ -17,7 +17,11 @@ public class Marker {
 
 
     @NonNull
-    private String  name, code, type;
+    private final String  name;
+    @NonNull
+    private String code;
+    @NonNull
+    private String type;
     private int water_id;
     private double lat, lng;
 

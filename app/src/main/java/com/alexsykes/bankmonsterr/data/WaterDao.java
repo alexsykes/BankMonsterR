@@ -10,7 +10,7 @@ import java.util.List;
 
 @Dao
 public interface WaterDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertWater(Water water);
 
     @Query("DELETE FROM waters")

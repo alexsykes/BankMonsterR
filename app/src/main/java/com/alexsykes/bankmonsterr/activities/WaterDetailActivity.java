@@ -99,6 +99,7 @@ public class WaterDetailActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+       // mMap.setMyLocationEnabled(true);
         mMap.setOnMapLoadedCallback(this);
         // mMap.setMaxZoomPreference(15);
         String marker_title;

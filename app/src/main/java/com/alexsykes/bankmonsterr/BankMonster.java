@@ -7,18 +7,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
-
 import com.alexsykes.bankmonsterr.data.Marker;
 import com.alexsykes.bankmonsterr.data.MarkerDao;
 import com.alexsykes.bankmonsterr.data.Parent;
 import com.alexsykes.bankmonsterr.data.ParentDao;
 import com.alexsykes.bankmonsterr.data.Water;
-import com.alexsykes.bankmonsterr.data.WaterAndParents;
 import com.alexsykes.bankmonsterr.data.WaterDao;
 import com.alexsykes.bankmonsterr.data.WaterRoomDatabase;
-import com.alexsykes.bankmonsterr.data.WaterViewModel;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -45,14 +40,10 @@ public class BankMonster extends Application {
             Log.i("Info", "Can connect");
             getSavedData();
         } else {
-            // showDialog();
             Log.i("Info", "Cannot connect");
         }
-
-
         Log.i("Info", "onCreateLaunch: done ");
     }
-
 
     private void addDataToDb(String response) {
 
@@ -67,6 +58,7 @@ public class BankMonster extends Application {
         JSONArray waters = new JSONArray();
         JSONArray markers = new JSONArray();
         JSONArray parents = new JSONArray();
+
         try {
             JSONArray jsonArray = new JSONArray(response);
 

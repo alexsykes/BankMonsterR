@@ -2,6 +2,7 @@ package com.alexsykes.bankmonsterr.data;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "markers")
@@ -14,10 +15,6 @@ public class Marker {
     @PrimaryKey(autoGenerate = true)
     private int marker_id;
 
-    @NonNull
-    public String getName() {
-        return name;
-    }
 
     @NonNull
     private String  name, code, type;
@@ -28,15 +25,20 @@ public class Marker {
         return marker_id;
     }
 
-    public Marker(@NonNull String name, String code, @NonNull String type, int water_id, double lng, double lat) {
+    public Marker(int marker_id, @NonNull String name, @NonNull String code, @NonNull String type, int water_id, double lat, double lng) {
+        this.marker_id = marker_id;
+        this.name = name;
         this.code = code;
         this.type = type;
         this.water_id = water_id;
         this.lat = lat;
         this.lng = lng;
-        this.name = name;
     }
 
+    @NonNull
+    public String getName() {
+        return name;
+    }
 
     @NonNull
     public String getCode() {

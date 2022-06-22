@@ -13,7 +13,7 @@ public interface ParentDao {
 
 
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertParent(Parent parent);
 
     @Query("SELECT * FROM parents ORDER by name ASC")

@@ -14,7 +14,9 @@ import com.alexsykes.bankmonsterr.data.Marker;
 import com.alexsykes.bankmonsterr.data.MarkerDao;
 import com.alexsykes.bankmonsterr.data.Parent;
 import com.alexsykes.bankmonsterr.data.ParentDao;
+import com.alexsykes.bankmonsterr.data.Water;
 import com.alexsykes.bankmonsterr.data.WaterAndParents;
+import com.alexsykes.bankmonsterr.data.WaterDao;
 import com.alexsykes.bankmonsterr.data.WaterRoomDatabase;
 import com.alexsykes.bankmonsterr.data.WaterViewModel;
 import com.android.volley.Request;
@@ -37,10 +39,6 @@ public class BankMonster extends Application {
     public void onCreate() {
         super.onCreate();
         Log.i("Info", "onCreateLaunch: ");
-        WaterRoomDatabase db = WaterRoomDatabase.getDatabase(getApplicationContext());
-        ParentDao parentDao = db.pdao();
-        MarkerDao markerDao = db.dao();
-
 
         canConnect = canConnect();
         if(canConnect) {
@@ -57,6 +55,15 @@ public class BankMonster extends Application {
 
 
     private void addDataToDb(String response) {
+
+        WaterRoomDatabase db = WaterRoomDatabase.getDatabase(getApplicationContext());
+        ParentDao parentDao = db.pdao();
+        MarkerDao markerDao = db.dao();
+        WaterDao waterDao = db.wdao();
+        Parent parent;
+        Water water;
+        Marker marker;
+
         JSONArray waters = new JSONArray();
         JSONArray markers = new JSONArray();
         JSONArray parents = new JSONArray();
@@ -80,8 +87,10 @@ public class BankMonster extends Application {
                 String name = theWater.getString("name");
                 String type = theWater.getString("type");
                 int parent_id = theWater.getInt("parent_id");
+                int water_id = theWater.getInt("id");
 
-//                Log.i("Info", "Water: " +  name + " " + type + " " + parent_id);
+                water = new Water(water_id,name,type,parent_id);
+                waterDao.insertWater(water);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -90,10 +99,13 @@ public class BankMonster extends Application {
 
         for(int index = 0; index < parents.length(); index ++) {
             try {
-                JSONObject parent = new JSONObject(parents.get(index).toString());
-                String name = parent.getString("name");
-                String type = parent.getString("type");
-                int id = parent.getInt("id");
+                JSONObject parentO = new JSONObject(parents.get(index).toString());
+                String name = parentO.getString("name");
+                String type = parentO.getString("type");
+                int id = parentO.getInt("id");
+
+                parent = new Parent(id,name,type);
+                parentDao.insertParent(parent);
 
 //                Log.i("Info", "Parent: " +  name + " " + type + " " + id);
 
@@ -105,10 +117,17 @@ public class BankMonster extends Application {
 
         for(int index = 0; index < markers.length(); index ++) {
             try {
-                JSONObject marker = new JSONObject(markers.get(index).toString());
-                String name = marker.getString("name");
-                String code = marker.getString("code");
-                int id = marker.getInt("id");
+                JSONObject m = new JSONObject(markers.get(index).toString());
+                String name = m.getString("name");
+                String code = m.getString("code");
+                String type = m.getString("type");
+                int  water_id = m.getInt("water_id");
+                int marker_id = m.getInt("id");
+                double lat = m.getDouble("latitude");
+                double lng = m.getDouble("longitude");
+
+                marker = new Marker(marker_id, name,code,type,water_id, lat, lng);
+                markerDao.insertMarker(marker);
 
 //                Log.i("Info", "Marker: " +  name + " " + code + " " + id);
 

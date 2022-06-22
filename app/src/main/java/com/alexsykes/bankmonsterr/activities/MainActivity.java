@@ -48,14 +48,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        canConnect = canConnect();
-        if(canConnect) {
-            Log.i("Info", "Can connect");
-            getSavedData();
-        } else {
-            // showDialog();
-            Log.i("Info", "Cannot connect");
-        }
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -70,62 +62,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         waterandparents.observe(this, adapter::submitList);
     }
 
-    private void getSavedData() {
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(getApplication().getBaseContext());
-        String url = "https://android.alexsykes.com/getDataFromServer.php";
-
-// Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        addDataToDb(response);
-                       // Log.i("Info", "onResponse: " + response.substring(0,150));
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("Info", "That didn't work!");
-
-            }
-        });
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
-
-    private void addDataToDb(String response) {
-        JSONArray waters = new JSONArray();
-        JSONArray markers = new JSONArray();
-        JSONArray parents = new JSONArray();
-        try {
-            JSONArray jsonArray = new JSONArray(response);
-
-            Log.i("Info", "JSONArray: " + jsonArray.length());
-            waters = jsonArray.getJSONArray(0);
-            Log.i("Info", "Waters: " + waters.length());
-            markers = jsonArray.getJSONArray(1);
-            Log.i("Info", "Markers: " + markers.length());
-            parents = jsonArray.getJSONArray(2);
-            Log.i("Info", "Parents: " + parents.length());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        for(int index = 0; index < waters.length(); index ++) {
-            try {
-                JSONObject theWater = new JSONObject(waters.get(index).toString());
-                String name = theWater.getString("name");
-                String type = theWater.getString("type");
-                int parent_id = theWater.getInt("parent_id");
-
-                Log.i("Info", "addDataToDb: " +  name + " " + type + " " + parent_id);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public void onClickCalled(int id, String water_name) {
         // Check for connectivity
@@ -172,13 +108,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private void goRivers() {
         Log.i("Info", "goRivers: ");
-    }
-
-
-    protected boolean canConnect() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        @SuppressLint("MissingPermission") NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 }

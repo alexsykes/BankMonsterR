@@ -1,6 +1,7 @@
 package com.alexsykes.bankmonsterr.data;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -22,7 +23,7 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    static WaterRoomDatabase getDatabase(final Context context) {
+    public static WaterRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (WaterRoomDatabase.class) {
                 if (INSTANCE == null) {
@@ -42,6 +43,7 @@ public abstract class WaterRoomDatabase  extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
 
+            Log.i("Info", "onCreate: DB");
             databaseWriteExecutor.execute(() -> {
                 MarkerDao dao = INSTANCE.dao();
                 WaterDao wdao = INSTANCE.wdao();

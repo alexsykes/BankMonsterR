@@ -7,6 +7,16 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.alexsykes.bankmonsterr.data.Marker;
+import com.alexsykes.bankmonsterr.data.MarkerDao;
+import com.alexsykes.bankmonsterr.data.Parent;
+import com.alexsykes.bankmonsterr.data.ParentDao;
+import com.alexsykes.bankmonsterr.data.WaterAndParents;
+import com.alexsykes.bankmonsterr.data.WaterRoomDatabase;
+import com.alexsykes.bankmonsterr.data.WaterViewModel;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -18,6 +28,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class BankMonster extends Application {
     boolean canConnect;
 
@@ -25,6 +37,10 @@ public class BankMonster extends Application {
     public void onCreate() {
         super.onCreate();
         Log.i("Info", "onCreateLaunch: ");
+        WaterRoomDatabase db = WaterRoomDatabase.getDatabase(getApplicationContext());
+        ParentDao parentDao = db.pdao();
+        MarkerDao markerDao = db.dao();
+
 
         canConnect = canConnect();
         if(canConnect) {
@@ -34,6 +50,9 @@ public class BankMonster extends Application {
             // showDialog();
             Log.i("Info", "Cannot connect");
         }
+
+
+        Log.i("Info", "onCreateLaunch: done ");
     }
 
 
@@ -62,7 +81,7 @@ public class BankMonster extends Application {
                 String type = theWater.getString("type");
                 int parent_id = theWater.getInt("parent_id");
 
-                Log.i("Info", "Water: " +  name + " " + type + " " + parent_id);
+//                Log.i("Info", "Water: " +  name + " " + type + " " + parent_id);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -76,7 +95,7 @@ public class BankMonster extends Application {
                 String type = parent.getString("type");
                 int id = parent.getInt("id");
 
-                Log.i("Info", "Parent: " +  name + " " + type + " " + id);
+//                Log.i("Info", "Parent: " +  name + " " + type + " " + id);
 
             } catch (JSONException e) {
                 Log.i("Info", "Error ");
@@ -91,7 +110,7 @@ public class BankMonster extends Application {
                 String code = marker.getString("code");
                 int id = marker.getInt("id");
 
-                Log.i("Info", "Marker: " +  name + " " + code + " " + id);
+//                Log.i("Info", "Marker: " +  name + " " + code + " " + id);
 
             } catch (JSONException e) {
                 Log.i("Info", "Error ");

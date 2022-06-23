@@ -33,7 +33,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback {
 
     MarkerViewModel markerViewModel;
-    List<Marker> markerList;
+    List<Marker> allMarkers;
     private GoogleMap mMap;
 
     @Override
@@ -59,31 +59,13 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     void getMarkers() {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        markerList = markerViewModel.getAllMarkers();
-        Log.i("Info", "getMarkers: " + markerList.size());
-//        RecyclerView rv = findViewById(R.id.markerRecyclerView);
-//        final MarkerListAdapter adapter = new MarkerListAdapter(markerList);
-//        rv.setAdapter(adapter);
-//        rv.setLayoutManager(new LinearLayoutManager(this));
+        allMarkers = markerViewModel.getAllMarkers();
+        Log.i("Info", "getMarkers: " + allMarkers.size());
     }
 
     public void onClickCalled(int id, String water_name) {
-        // Check for connectivity
-//            Intent intent = new Intent(MainActivity.this, WaterDetailActivity.class);
-//            intent.putExtra("water_id", id);
-//            intent.putExtra("water_name",water_name);
-//            startActivity(intent);
-    }
-
-
-    @Override
-    public void onMapLoaded() {
-        // mMap.setMaxZoomPreference(15);
-//
-//        mMap.setOnMyLocationButtonClickListener(this);
-//        mMap.setOnMyLocationClickListener(this);
-//        enableMyLocation();
-        Log.i("Info", "onMapLoaded: ");
+        Log.i("Info", "onClickCalled: " + water_name + id);
+        List<Marker> markerList = markerViewModel.getMarkerList(id);
         if (!markerList.isEmpty()) {
             LatLng latLng;
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -102,6 +84,61 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             if (markerList.size() != 1) {
                 // mMap.resetMinMaxZoomPreference();
             }
+        } else {
+            showAllMarkers();
+        }
+
+    }
+
+    private void showAllMarkers() {
+        if (!allMarkers.isEmpty()) {
+            LatLng latLng;
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            int padding = 100;
+            String code;
+
+            for (Marker marker : allMarkers) {
+                latLng = new LatLng(marker.getLat(), marker.getLng());
+                builder.include(latLng);
+                code = marker.getCode();
+            }
+
+            LatLngBounds bounds =
+                    builder.build();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+            if (allMarkers.size() != 1) {
+                // mMap.resetMinMaxZoomPreference();
+            }
+        }
+    }
+
+
+    @Override
+    public void onMapLoaded() {
+        // mMap.setMaxZoomPreference(15);
+//
+//        mMap.setOnMyLocationButtonClickListener(this);
+//        mMap.setOnMyLocationClickListener(this);
+//        enableMyLocation();
+        Log.i("Info", "onMapLoaded: ");
+        if (!allMarkers.isEmpty()) {
+            LatLng latLng;
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            int padding = 100;
+            String code;
+
+            for (Marker marker : allMarkers) {
+                latLng = new LatLng(marker.getLat(), marker.getLng());
+                builder.include(latLng);
+                code = marker.getCode();
+            }
+
+            LatLngBounds bounds =
+                    builder.build();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+            if (allMarkers.size() != 1) {
+                // mMap.resetMinMaxZoomPreference();
+            }
         }
     }
 
@@ -115,10 +152,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         String marker_title;
         LatLng latLng;
 
-        if (!markerList.isEmpty()) {
+        if (!allMarkers.isEmpty()) {
             String code;
 
-            for (Marker marker : markerList) {
+            for (Marker marker : allMarkers) {
                 latLng = new LatLng(marker.getLat(), marker.getLng());
                 code = marker.getCode();
                 marker_title = marker.getName() + " " + code;

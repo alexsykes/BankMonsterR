@@ -119,8 +119,6 @@ public class BankMonster extends Application {
                 BMarker = new BMarker(marker_id, name, code, type, water_id, lat, lng);
                 markerDao.insertMarker(BMarker);
 
-//                Log.i("Info", "Marker: " +  name + " " + code + " " + id);
-
             } catch (JSONException e) {
                 Log.i("Info", "Error ");
                 e.printStackTrace();

@@ -20,8 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.bankmonsterr.R;
 import com.alexsykes.bankmonsterr.data.BMarker;
+import com.alexsykes.bankmonsterr.data.MarkerDao;
 import com.alexsykes.bankmonsterr.data.MarkerViewModel;
 import com.alexsykes.bankmonsterr.data.WaterAndParents;
+import com.alexsykes.bankmonsterr.data.WaterRoomDatabase;
 import com.alexsykes.bankmonsterr.data.WaterViewModel;
 import com.alexsykes.bankmonsterr.utility.WaterListAdapter;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,10 +46,17 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     LinearLayout markerDetailLayout;
     TextView markerNameText, markerDetailText;
     Button saveButton;
+    BMarker current;
+    double curLng, curLat;
+    int curr_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WaterRoomDatabase db = WaterRoomDatabase.getDatabase(this);
+        MarkerDao markerDao = db.dao();
+
+
         setContentView(R.layout.activity_main2);
         markerDetailLayout = findViewById(R.id.markerDetailLayout);
         markerDetailLayout.setVisibility(View.GONE);
@@ -55,6 +64,19 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerDetailText = findViewById(R.id.markerDetailText);
         saveButton = findViewById(R.id.saveButtonbutton);
         saveButton.setVisibility(View.GONE);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("Info", "Save button clicked.");
+                markerDao.updateMarker(curr_id, curLat, curLng);
+//                int marker_id = current.getMarker_id();
+//                double lat = current.getLat();
+//                double lng = current.getLng();
+
+                // markerDao.updateMarker(marker_id,lat,lng);
+            }
+        });
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         final WaterListAdapter adapter = new WaterListAdapter(new WaterListAdapter.WaterDiff());
@@ -179,8 +201,15 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                         String snippet = marker.getSnippet();
                         String latStr = df.format(newpos.latitude);
                         String lngStr = df.format(newpos.longitude);
+                        int marker_id = Integer.valueOf(marker.getSnippet());
                         markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
                                 + System.lineSeparator() + "Marker id: " + snippet);
+
+                        curLat = newpos.latitude;
+                        curLng = newpos.longitude;
+                        curr_id = Integer.valueOf(snippet);
+
+                        //   current = new BMarker(marker_id, newpos.latitude, newpos.longitude);
                     }
 
                     @Override

@@ -11,4 +11,7 @@
     <string name="location_permission_denied">Location permission denied</string>
     <string name="permission_required_toast">Location permission required</string>
     <string name="permission_rationale_location">Permission needed for location access</string>
+    <string name="current_marker">Current marker</string>
+    <string name="details">Details</string>
+    <string name="save">Save</string>
 </resources>

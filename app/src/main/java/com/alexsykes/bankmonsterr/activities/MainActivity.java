@@ -6,6 +6,10 @@ package com.alexsykes.bankmonsterr.activities;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +33,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback {
@@ -36,11 +41,20 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     MarkerViewModel markerViewModel;
     List<BMarker> allBMarkers;
     private GoogleMap mMap;
+    LinearLayout markerDetailLayout;
+    TextView markerNameText, markerDetailText;
+    Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        markerDetailLayout = findViewById(R.id.markerDetailLayout);
+        markerDetailLayout.setVisibility(View.GONE);
+        markerNameText = findViewById(R.id.markerNameText);
+        markerDetailText = findViewById(R.id.markerDetailText);
+        saveButton = findViewById(R.id.saveButtonbutton);
+        saveButton.setVisibility(View.GONE);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         final WaterListAdapter adapter = new WaterListAdapter(new WaterListAdapter.WaterDiff());
@@ -115,11 +129,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     @Override
     public void onMapLoaded() {
-        // mMap.setMaxZoomPreference(15);
-//
-//        mMap.setOnMyLocationButtonClickListener(this);
-//        mMap.setOnMyLocationClickListener(this);
-//        enableMyLocation();
         Log.i("Info", "onMapLoaded: ");
         if (!allBMarkers.isEmpty()) {
             LatLng latLng;
@@ -150,22 +159,41 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         mMap.setMaxZoomPreference(20);
         mMap.setOnMarkerDragListener(
                 new GoogleMap.OnMarkerDragListener() {
+                    final DecimalFormat df = new DecimalFormat("#.#####");
+                    LatLng startPos, endPos;
+
                     @Override
                     public void onMarkerDrag(@NonNull Marker marker) {
+                        LatLng newpos = marker.getPosition();
+                        String snippet = marker.getSnippet();
+                        String latStr = df.format(newpos.latitude);
+                        String lngStr = df.format(newpos.longitude);
+                        markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                + System.lineSeparator() + "Marker id: " + snippet);
                     }
 
                     @Override
                     public void onMarkerDragEnd(@NonNull Marker marker) {
+                        // markerDetailLayout.setVisibility(View.GONE);
                         LatLng newpos = marker.getPosition();
-                        String id = marker.getId();
-                        double lat = newpos.latitude;
-                        double lng = newpos.longitude;
                         String snippet = marker.getSnippet();
-                        Log.i("Info", "Marker id: " + snippet + ": " + lat + ":" + lng);
+                        String latStr = df.format(newpos.latitude);
+                        String lngStr = df.format(newpos.longitude);
+                        markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                + System.lineSeparator() + "Marker id: " + snippet);
                     }
 
                     @Override
                     public void onMarkerDragStart(@NonNull Marker marker) {
+                        markerDetailLayout.setVisibility(View.VISIBLE);
+                        saveButton.setVisibility(View.VISIBLE);
+                        markerNameText.setText(marker.getTitle());
+                        startPos = marker.getPosition();
+                        String snippet = marker.getSnippet();
+                        String latStr = df.format(startPos.latitude);
+                        String lngStr = df.format(startPos.longitude);
+                        markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                + System.lineSeparator() + "Marker id: " + snippet);
 
                     }
                 }

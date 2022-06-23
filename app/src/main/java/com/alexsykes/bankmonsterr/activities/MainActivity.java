@@ -136,8 +136,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             LatLngBounds bounds =
                     builder.build();
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+           // mMap.setMaxZoomPreference(18);
             if (allBMarkers.size() != 1) {
-                // mMap.resetMinMaxZoomPreference();
             }
         }
     }
@@ -191,27 +191,21 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 type = BMarker.getType();
                 String snippet = String.valueOf(BMarker.getMarker_id());
 
-                if (type.equals("Car Park")) {
-                    marker_title = BMarker.getName() + " " + code;
-                    mMap.addMarker(new MarkerOptions()
-                                    .position(latLng)
-                                    .title(marker_title)
-                                    .snippet(snippet)
-                                    .visible(true))
-                            .setDraggable(true)
-                    ;
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                } else {
-                    marker_title = BMarker.getName() + " " + code;
-                    MarkerOptions markerOptions = new MarkerOptions()
-                            .position(latLng)
-                            .snippet(snippet)
-                            .title(marker_title)
-                            .visible(true);
+                marker_title = BMarker.getName() + " " + code;
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(latLng)
+                        .title(marker_title)
+                        .snippet(snippet)
+                        .visible(true);
 
-                    markerOptions.draggable(true);
-                    mMap.addMarker(markerOptions);
+                if (type.equals("Car Park")) {
+                    markerOptions.visible(true);
+                } else {
+                    markerOptions.visible(true);
                 }
+                markerOptions.draggable(true);
+                mMap.addMarker(markerOptions);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         }
     }

@@ -8,35 +8,36 @@ import java.util.List;
 
 public class MarkerRepository {
     private final MarkerDao dao;
-    private final List<Marker> allMarkers;
-    private final LiveData<List<Marker>> markersForWater;
+    private final List<BMarker> allBMarkers;
+    private final LiveData<List<BMarker>> markersForWater;
     int water_id;
 
     MarkerRepository(Application application) {
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(application);
         dao = db.dao();
-        allMarkers = dao.getAllMarkers();
+        allBMarkers = dao.getAllMarkers();
         markersForWater = dao.getAllMarkersForWater(water_id);
     }
 
-    List<Marker> getAllMarkers() {
-        return allMarkers;
+    List<BMarker> getAllMarkers() {
+        return allBMarkers;
     }
 
     public void setWater_id(int water_id) {
         this.water_id = water_id;
     }
 
-    void insert(Marker marker) {
+    void insert(BMarker BMarker) {
         WaterRoomDatabase.databaseWriteExecutor.execute(() -> {
-            dao.insertMarker(marker);
+            dao.insertMarker(BMarker);
         });
     }
 
-    public LiveData<List<Marker>> getAllMarkersForWater(int water_id) { return markersForWater;
+    public LiveData<List<BMarker>> getAllMarkersForWater(int water_id) {
+        return markersForWater;
     }
 
-    public List<Marker> getMarkerList(int water_id) {
+    public List<BMarker> getMarkerList(int water_id) {
         return dao.getAllMarkerList(water_id);
     }
 }

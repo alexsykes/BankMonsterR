@@ -1,7 +1,6 @@
 package com.alexsykes.bankmonsterr.activities;
 
 import android.Manifest;
-import android.Manifest.permission;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.bankmonsterr.R;
-import com.alexsykes.bankmonsterr.data.Marker;
+import com.alexsykes.bankmonsterr.data.BMarker;
 import com.alexsykes.bankmonsterr.data.MarkerViewModel;
 import com.alexsykes.bankmonsterr.utility.MarkerListAdapter;
 import com.alexsykes.bankmonsterr.utility.PermissionUtils;
@@ -52,7 +51,7 @@ public class WaterDetailActivity extends AppCompatActivity implements
     int height, width;
     String water_name;
     MarkerViewModel markerViewModel;
-    List<Marker> markerList;
+    List<BMarker> BMarkerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +79,9 @@ public class WaterDetailActivity extends AppCompatActivity implements
     }
 
     void getMarkers() {
-        markerList = markerViewModel.getMarkerList(water_id);
+        BMarkerList = markerViewModel.getMarkerList(water_id);
         RecyclerView rv = findViewById(R.id.markerRecyclerView);
-        final MarkerListAdapter adapter = new MarkerListAdapter(markerList);
+        final MarkerListAdapter adapter = new MarkerListAdapter(BMarkerList);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -95,22 +94,22 @@ public class WaterDetailActivity extends AppCompatActivity implements
         mMap.setOnMyLocationClickListener(this);
         enableMyLocation();
         Log.i("Info", "onMapLoaded: ");
-        if (!markerList.isEmpty()) {
+        if (!BMarkerList.isEmpty()) {
             LatLng latLng;
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
             String code;
 
-            for (Marker marker : markerList) {
-                latLng = new LatLng(marker.getLat(), marker.getLng());
+            for (BMarker BMarker : BMarkerList) {
+                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
                 builder.include(latLng);
-                code = marker.getCode();
+                code = BMarker.getCode();
             }
 
             LatLngBounds bounds =
                     builder.build();
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-            if(markerList.size() != 1) {
+            if (BMarkerList.size() != 1) {
                 // mMap.resetMinMaxZoomPreference();
             }
         }
@@ -142,13 +141,13 @@ public class WaterDetailActivity extends AppCompatActivity implements
         String marker_title;
         LatLng latLng;
 
-        if (!markerList.isEmpty()) {
+        if (!BMarkerList.isEmpty()) {
             String code;
 
-            for(Marker marker: markerList) {
-                latLng = new LatLng(marker.getLat(), marker.getLng());
-                code = marker.getCode();
-                marker_title = marker.getName() + " " + code;
+            for (BMarker BMarker : BMarkerList) {
+                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
+                code = BMarker.getCode();
+                marker_title = BMarker.getName() + " " + code;
                 mMap.addMarker(new MarkerOptions().position(latLng).title(marker_title));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }

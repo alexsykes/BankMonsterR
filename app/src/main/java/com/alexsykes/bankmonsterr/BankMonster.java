@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.alexsykes.bankmonsterr.data.Marker;
+import com.alexsykes.bankmonsterr.data.BMarker;
 import com.alexsykes.bankmonsterr.data.MarkerDao;
 import com.alexsykes.bankmonsterr.data.Parent;
 import com.alexsykes.bankmonsterr.data.ParentDao;
@@ -24,8 +24,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 public class BankMonster extends Application {
     boolean canConnect;
@@ -53,7 +51,7 @@ public class BankMonster extends Application {
         WaterDao waterDao = db.wdao();
         Parent parent;
         Water water;
-        Marker marker;
+        BMarker BMarker;
 
         JSONArray waters = new JSONArray();
         JSONArray markers = new JSONArray();
@@ -113,13 +111,13 @@ public class BankMonster extends Application {
                 String name = m.getString("name");
                 String code = m.getString("code");
                 String type = m.getString("type");
-                int  water_id = m.getInt("water_id");
+                int water_id = m.getInt("water_id");
                 int marker_id = m.getInt("id");
                 double lat = m.getDouble("latitude");
                 double lng = m.getDouble("longitude");
 
-                marker = new Marker(marker_id, name,code,type,water_id, lat, lng);
-                markerDao.insertMarker(marker);
+                BMarker = new BMarker(marker_id, name, code, type, water_id, lat, lng);
+                markerDao.insertMarker(BMarker);
 
 //                Log.i("Info", "Marker: " +  name + " " + code + " " + id);
 

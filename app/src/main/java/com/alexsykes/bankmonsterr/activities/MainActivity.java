@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.bankmonsterr.R;
-import com.alexsykes.bankmonsterr.data.Marker;
+import com.alexsykes.bankmonsterr.data.BMarker;
 import com.alexsykes.bankmonsterr.data.MarkerViewModel;
 import com.alexsykes.bankmonsterr.data.WaterAndParents;
 import com.alexsykes.bankmonsterr.data.WaterViewModel;
@@ -33,7 +33,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback {
 
     MarkerViewModel markerViewModel;
-    List<Marker> allMarkers;
+    List<BMarker> allBMarkers;
     private GoogleMap mMap;
 
     @Override
@@ -59,29 +59,29 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     void getMarkers() {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        allMarkers = markerViewModel.getAllMarkers();
-        Log.i("Info", "getMarkers: " + allMarkers.size());
+        allBMarkers = markerViewModel.getAllMarkers();
+        Log.i("Info", "getMarkers: " + allBMarkers.size());
     }
 
     public void onClickCalled(int id, String water_name) {
         Log.i("Info", "onClickCalled: " + water_name + id);
-        List<Marker> markerList = markerViewModel.getMarkerList(id);
-        if (!markerList.isEmpty()) {
+        List<BMarker> BMarkerList = markerViewModel.getMarkerList(id);
+        if (!BMarkerList.isEmpty()) {
             LatLng latLng;
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
             String code;
 
-            for (Marker marker : markerList) {
-                latLng = new LatLng(marker.getLat(), marker.getLng());
+            for (BMarker BMarker : BMarkerList) {
+                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
                 builder.include(latLng);
-                code = marker.getCode();
+                code = BMarker.getCode();
             }
 
             LatLngBounds bounds =
                     builder.build();
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-            if (markerList.size() != 1) {
+            if (BMarkerList.size() != 1) {
                 // mMap.resetMinMaxZoomPreference();
             }
         } else {
@@ -91,22 +91,22 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     }
 
     private void showAllMarkers() {
-        if (!allMarkers.isEmpty()) {
+        if (!allBMarkers.isEmpty()) {
             LatLng latLng;
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
             String code;
 
-            for (Marker marker : allMarkers) {
-                latLng = new LatLng(marker.getLat(), marker.getLng());
+            for (BMarker BMarker : allBMarkers) {
+                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
                 builder.include(latLng);
-                code = marker.getCode();
+                code = BMarker.getCode();
             }
 
             LatLngBounds bounds =
                     builder.build();
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-            if (allMarkers.size() != 1) {
+            if (allBMarkers.size() != 1) {
                 // mMap.resetMinMaxZoomPreference();
             }
         }
@@ -121,22 +121,22 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 //        mMap.setOnMyLocationClickListener(this);
 //        enableMyLocation();
         Log.i("Info", "onMapLoaded: ");
-        if (!allMarkers.isEmpty()) {
+        if (!allBMarkers.isEmpty()) {
             LatLng latLng;
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
             String code;
 
-            for (Marker marker : allMarkers) {
-                latLng = new LatLng(marker.getLat(), marker.getLng());
+            for (BMarker BMarker : allBMarkers) {
+                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
                 builder.include(latLng);
-                code = marker.getCode();
+                code = BMarker.getCode();
             }
 
             LatLngBounds bounds =
                     builder.build();
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-            if (allMarkers.size() != 1) {
+            if (allBMarkers.size() != 1) {
                 // mMap.resetMinMaxZoomPreference();
             }
         }
@@ -152,17 +152,16 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         String marker_title;
         LatLng latLng;
 
-        if (!allMarkers.isEmpty()) {
+        if (!allBMarkers.isEmpty()) {
             String code;
 
-            for (Marker marker : allMarkers) {
-                latLng = new LatLng(marker.getLat(), marker.getLng());
-                code = marker.getCode();
-                marker_title = marker.getName() + " " + code;
+            for (BMarker BMarker : allBMarkers) {
+                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
+                code = BMarker.getCode();
+                marker_title = BMarker.getName() + " " + code;
                 mMap.addMarker(new MarkerOptions().position(latLng).title(marker_title));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         }
-
     }
 }

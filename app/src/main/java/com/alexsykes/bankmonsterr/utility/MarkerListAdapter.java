@@ -3,33 +3,30 @@ package com.alexsykes.bankmonsterr.utility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alexsykes.bankmonsterr.R;
-import com.alexsykes.bankmonsterr.data.Marker;
+import com.alexsykes.bankmonsterr.data.BMarker;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
 public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.MarkerViewHolder> {
-    List<Marker> markerList;
-    Marker current;
+    List<BMarker> BMarkerList;
+    BMarker current;
 
-    public MarkerListAdapter(List<Marker> markerList) {
-        this.markerList = markerList;
+    public MarkerListAdapter(List<BMarker> BMarkerList) {
+        this.BMarkerList = BMarkerList;
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull MarkerViewHolder holder, int position) {
-        Marker marker = markerList.get(position);
-        holder.bind(marker);
+        BMarker BMarker = BMarkerList.get(position);
+        holder.bind(BMarker);
     }
 
     @NonNull
@@ -42,7 +39,7 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
 
     @Override
     public int getItemCount() {
-        return markerList.size();
+        return BMarkerList.size();
     }
 
 
@@ -57,17 +54,17 @@ public class MarkerListAdapter extends RecyclerView.Adapter<MarkerListAdapter.Ma
             lngTextView = view.findViewById(R.id.lngTextView);
         }
 
-        public void bind(Marker current) {
-            int marker_id = current.getMarker_id();
+         public void bind(BMarker current) {
+             int marker_id = current.getMarker_id();
 
-            DecimalFormat myFormatter = new DecimalFormat("###.00000");
-            String latStr, lngStr;
-            lngStr = myFormatter.format(current.getLng());
-            latStr = myFormatter.format(current.getLat());
+             DecimalFormat myFormatter = new DecimalFormat("###.00000");
+             String latStr, lngStr;
+             lngStr = myFormatter.format(current.getLng());
+             latStr = myFormatter.format(current.getLat());
 
-            nameTextView.setText(current.getName() + " " + current.getCode());
-            typeTextView.setText(current.getType());
-            lngTextView.setText(lngStr);
+             nameTextView.setText(current.getName() + " " + current.getCode());
+             typeTextView.setText(current.getType());
+             lngTextView.setText(lngStr);
             latTextView.setText(latStr);
         }
     }

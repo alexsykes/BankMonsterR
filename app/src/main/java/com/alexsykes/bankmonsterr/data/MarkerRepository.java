@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MarkerRepository {
     private final MarkerDao dao;
-    private final LiveData<List<Marker>> allMarkers;
+    private final List<Marker> allMarkers;
     private final LiveData<List<Marker>> markersForWater;
     int water_id;
 
@@ -19,7 +19,7 @@ public class MarkerRepository {
         markersForWater = dao.getAllMarkersForWater(water_id);
     }
 
-    LiveData<List<Marker>> getAllMarkers() {
+    List<Marker> getAllMarkers() {
         return allMarkers;
     }
 

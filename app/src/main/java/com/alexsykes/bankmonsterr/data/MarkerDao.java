@@ -18,7 +18,7 @@ public interface MarkerDao {
     void deleteAllMarkers();
 
     @Query("SELECT * FROM markers ORDER by water_id ASC")
-    LiveData<List<Marker>> getAllMarkers();
+    List<Marker> getAllMarkers();
 
     @Query("SELECT * FROM markers WHERE water_id = :water_id")
     LiveData<List<Marker>> getAllMarkersForWater(int water_id);

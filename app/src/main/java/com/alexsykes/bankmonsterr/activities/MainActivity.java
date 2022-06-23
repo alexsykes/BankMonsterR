@@ -26,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
@@ -87,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         } else {
             showAllMarkers();
         }
-
     }
 
     private void showAllMarkers() {
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         if (!allBMarkers.isEmpty()) {
             LatLng latLng;
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            int padding = 100;
+            int padding = 200;
             String code;
 
             for (BMarker BMarker : allBMarkers) {
@@ -145,22 +145,73 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        // mMap.setMyLocationEnabled(true);
         mMap.setOnMapLoadedCallback(this);
+        mMap.setMinZoomPreference(8);
+        mMap.setMaxZoomPreference(20);
+        mMap.setOnMarkerDragListener(
+                new GoogleMap.OnMarkerDragListener() {
+                    @Override
+                    public void onMarkerDrag(@NonNull Marker marker) {
+                    }
+
+                    @Override
+                    public void onMarkerDragEnd(@NonNull Marker marker) {
+                        LatLng newpos = marker.getPosition();
+                        String id = marker.getId();
+                        double lat = newpos.latitude;
+                        double lng = newpos.longitude;
+                        String snippet = marker.getSnippet();
+                        Log.i("Info", "Marker id: " + snippet + ": " + lat + ":" + lng);
+                    }
+
+                    @Override
+                    public void onMarkerDragStart(@NonNull Marker marker) {
+
+                    }
+                }
+        );
+        mMap.setOnMarkerClickListener(
+                marker -> {
+                    // marker.setVisible(!marker.isVisible());
+                    // marker.showInfoWindow();
+                    return false;
+                }
+        );
 
         // mMap.setMaxZoomPreference(15);
         String marker_title;
         LatLng latLng;
 
         if (!allBMarkers.isEmpty()) {
-            String code;
+            String code, type;
 
             for (BMarker BMarker : allBMarkers) {
                 latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
                 code = BMarker.getCode();
-                marker_title = BMarker.getName() + " " + code;
-                mMap.addMarker(new MarkerOptions().position(latLng).title(marker_title));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                type = BMarker.getType();
+                String snippet = String.valueOf(BMarker.getMarker_id());
+
+                if (type.equals("Car Park")) {
+                    marker_title = BMarker.getName() + " " + code;
+                    mMap.addMarker(new MarkerOptions()
+                                    .position(latLng)
+                                    .title(marker_title)
+                                    .snippet(snippet)
+                                    .visible(true))
+                            .setDraggable(true)
+                    ;
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                } else {
+                    marker_title = BMarker.getName() + " " + code;
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .position(latLng)
+                            .snippet(snippet)
+                            .title(marker_title)
+                            .visible(true);
+
+                    markerOptions.draggable(true);
+                    mMap.addMarker(markerOptions);
+                }
             }
         }
     }

@@ -20,8 +20,13 @@ import com.alexsykes.bankmonsterr.data.MarkerViewModel;
 import com.alexsykes.bankmonsterr.data.WaterAndParents;
 import com.alexsykes.bankmonsterr.data.WaterViewModel;
 import com.alexsykes.bankmonsterr.utility.WaterListAdapter;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
@@ -29,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     MarkerViewModel markerViewModel;
     List<Marker> markerList;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         waterandparents.observe(this, adapter::submitList);
 
         getMarkers();
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     void getMarkers() {
@@ -65,13 +75,57 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 //            startActivity(intent);
     }
 
+
     @Override
     public void onMapLoaded() {
+        // mMap.setMaxZoomPreference(15);
+//
+//        mMap.setOnMyLocationButtonClickListener(this);
+//        mMap.setOnMyLocationClickListener(this);
+//        enableMyLocation();
+        Log.i("Info", "onMapLoaded: ");
+        if (!markerList.isEmpty()) {
+            LatLng latLng;
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            int padding = 100;
+            String code;
 
+            for (Marker marker : markerList) {
+                latLng = new LatLng(marker.getLat(), marker.getLng());
+                builder.include(latLng);
+                code = marker.getCode();
+            }
+
+            LatLngBounds bounds =
+                    builder.build();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+            if (markerList.size() != 1) {
+                // mMap.resetMinMaxZoomPreference();
+            }
+        }
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+        // mMap.setMyLocationEnabled(true);
+        mMap.setOnMapLoadedCallback(this);
+
+        // mMap.setMaxZoomPreference(15);
+        String marker_title;
+        LatLng latLng;
+
+        if (!markerList.isEmpty()) {
+            String code;
+
+            for (Marker marker : markerList) {
+                latLng = new LatLng(marker.getLat(), marker.getLng());
+                code = marker.getCode();
+                marker_title = marker.getName() + " " + code;
+                mMap.addMarker(new MarkerOptions().position(latLng).title(marker_title));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            }
+        }
 
     }
 }

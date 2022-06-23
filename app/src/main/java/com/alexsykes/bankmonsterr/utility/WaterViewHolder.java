@@ -14,18 +14,18 @@ import com.alexsykes.bankmonsterr.activities.MainActivity;
 import com.alexsykes.bankmonsterr.data.WaterAndParents;
 
 public class WaterViewHolder extends RecyclerView.ViewHolder {
-    private final TextView waterViewItem, parentViewItem;
+    private final TextView waterViewItem;
 
     private WaterViewHolder(View itemView) {
         super(itemView);
         waterViewItem = itemView.findViewById(R.id.waterTextView);
-        parentViewItem = itemView.findViewById(R.id.parentTextView);
+      //  parentViewItem = itemView.findViewById(R.id.parentTextView);
     }
 
     public void bind(WaterAndParents current, final WaterListAdapter.OnItemClickListener listener) {
         String water_name = current.getWater();
         waterViewItem.setText(water_name);
-        parentViewItem.setText(current.getParent());
+     //   parentViewItem.setText(current.getParent());
         int water_id = current.getWater_id();
         // Log.i("Info", "bind: " + water_id);
         itemView.setOnClickListener(v -> {

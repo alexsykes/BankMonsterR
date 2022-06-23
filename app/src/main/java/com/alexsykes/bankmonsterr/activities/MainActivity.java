@@ -39,20 +39,16 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  {
     public static final int NEW_WATER_ACTIVITY_REQUEST_CODE = 1;
-    BottomNavigationView bottomNavigationView;
     boolean canConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         final WaterListAdapter adapter = new WaterListAdapter(new WaterListAdapter.WaterDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -70,44 +66,4 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             intent.putExtra("water_name",water_name);
             startActivity(intent);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings_menu_item:
-                goSettings();
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.goSettings:
-                goSettings();
-                return true;
-            case R.id.goRivers:
-                goRivers();
-                return true;
-            case R.id.goWaters:
-                goAllWaters();
-                return true;
-        }
-        return false;
-    }
-
-    private void goSettings() {
-        Log.i("Info", "goSettings: ");
-
-    }
-    private void goAllWaters() {
-        Intent intent = new Intent(MainActivity.this,AllWatersActivity.class );
-        startActivity(intent);
-    }
-
-    private void goRivers() {
-        Log.i("Info", "goRivers: ");
-    }
-
 }

@@ -19,14 +19,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BankMonsterR"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.MainActivity2"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
         <activity
             android:name=".activities.AllWatersActivity"
-            android:parentActivityName=".activities.MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.WaterDetailActivity"
             android:exported="false"
@@ -41,4 +45,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

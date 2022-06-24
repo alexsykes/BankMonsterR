@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     LinearLayout markerDetailLayout;
     TextView markerNameText, markerDetailText;
     Button saveButton;
+    FloatingActionButton newMarkerButton;
     BMarker current;
     double curLng, curLat;
     int curr_id;
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerDetailText = findViewById(R.id.markerDetailText);
         saveButton = findViewById(R.id.saveButtonbutton);
         saveButton.setVisibility(View.GONE);
+        newMarkerButton = findViewById(R.id.newMarkerButton);
 
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -100,6 +103,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 //                double lng = current.getLng();
 
                 // markerDao.updateMarker(marker_id,lat,lng);
+            }
+        });
+        newMarkerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "onClick: New Marker");
             }
         });
 
@@ -188,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 builder.include(latLng);
                 code = BMarker.getCode();
             }
-
             LatLngBounds bounds =
                     builder.build();
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
@@ -298,7 +306,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
-
     }
 
     private void getLocationPermission() {

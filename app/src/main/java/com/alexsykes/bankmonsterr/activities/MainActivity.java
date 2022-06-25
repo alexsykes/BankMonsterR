@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -63,9 +65,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final String TAG = "Info";
     private static final int DEFAULT_ZOOM = 15;
-    // A default location (Sydney, Australia) and default zoom to use when location permission is
-    // not granted.
-    private final LatLng defaultLocation = new LatLng(-53.59470125308922, -2.5608564913272858);
+    // private final LatLng defaultLocation = new LatLng(-53.59470125308922, -2.5608564913272858);
+    private LatLng defaultLocation;
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
     private boolean locationPermissionGranted;
@@ -101,9 +102,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         newMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // DialogFragment newFragment = new NewMarkerDialog();
-                // newFragment.show(getSupportFragmentManager(), "game");
-
+                //TODO - Dialog goes here
                 Log.i(TAG, "onClick: New Marker");
                 LatLng centre = mMap.getCameraPosition().target;
 
@@ -403,6 +402,27 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         allBMarkers = markerViewModel.getAllMarkers();
         Log.i("Info", "getMarkers: " + allBMarkers.size());
+    }
+
+    public void showDialog() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        MarkerDetailFragment newFragment = new MarkerDetailFragment();
+
+//        if (isLargeLayout) {
+//            // The device is using a large layout, so show the fragment as a dialog
+//            newFragment.show(fragmentManager, "dialog");
+//        } else {
+        // The device is smaller, so show the fragment fullscreen
+        Log.i(TAG, "showDialog: ");
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        // For a little polish, specify a transition animation
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // To make it fullscreen, use the 'content' root view as the container
+        // for the fragment, which is always the root view for the activity
+        newFragment.show(fragmentManager, "Dialo");
+        transaction.add(android.R.id.content, newFragment)
+                .addToBackStack(null).commit();
+//        }
     }
 
 

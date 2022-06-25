@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     LinearLayout markerDetailLayout;
     TextView markerNameText, markerDetailText;
     Button saveButton;
+    RecyclerView recyclerView;
     FloatingActionButton newMarkerButton;
     BMarker current;
     double curLng, curLat;
@@ -73,32 +74,28 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     // location retrieved by the Fused Location Provider.
     private Location lastKnownLocation;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(this);
         MarkerDao markerDao = db.dao();
 
-
+//        Set up UI components
         setContentView(R.layout.activity_main2);
         markerDetailLayout = findViewById(R.id.markerDetailLayout);
         markerDetailLayout.setVisibility(View.GONE);
         markerNameText = findViewById(R.id.markerNameText);
         markerDetailText = findViewById(R.id.markerDetailText);
-        saveButton = findViewById(R.id.saveButtonbutton);
+        saveButton = findViewById(R.id.saveButton);
         saveButton.setVisibility(View.GONE);
-        newMarkerButton = findViewById(R.id.newMarkerButton);
-
-        // Construct a FusedLocationProviderClient.
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i("Info", "Save button clicked.");
                 markerDao.updateMarker(curr_id, curLat, curLng);
+                markerDetailLayout.setVisibility(View.GONE);
+                saveButton.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
 //                int marker_id = current.getMarker_id();
 //                double lat = current.getLat();
 //                double lng = current.getLng();
@@ -106,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 // markerDao.updateMarker(marker_id,lat,lng);
             }
         });
+        newMarkerButton = findViewById(R.id.newMarkerButton);
         newMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,26 +111,27 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             }
         });
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
+
+        // Construct a FusedLocationProviderClient.
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+
         final WaterListAdapter adapter = new WaterListAdapter(new WaterListAdapter.WaterDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        // Load saved data
         WaterViewModel waterViewModel = new ViewModelProvider(this).get(WaterViewModel.class);
         LiveData<List<WaterAndParents>> waterandparents = waterViewModel.getWaterAndParentList();
         waterandparents.observe(this, adapter::submitList);
 
         getMarkers();
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-    }
-
-    void getMarkers() {
-        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
-        allBMarkers = markerViewModel.getAllMarkers();
-        Log.i("Info", "getMarkers: " + allBMarkers.size());
     }
 
     public void onClickCalled(int id, String water_name) {
@@ -183,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
     }
 
-
     @Override
     public void onMapLoaded() {
         Log.i("Info", "onMapLoaded: ");
@@ -212,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
      */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        Log.i("Info", "onMapReady: ");
         String marker_title, code, type;
         LatLng latLng;
         mMap = googleMap;
@@ -255,6 +254,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     public void onMarkerDragStart(@NonNull Marker marker) {
                         markerDetailLayout.setVisibility(View.VISIBLE);
                         saveButton.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+
                         markerNameText.setText(marker.getTitle());
                         startPos = marker.getPosition();
                         String snippet = marker.getSnippet();
@@ -305,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         getLocationPermission();
 
         // Turn on the My Location layer and the related control on the map.
-        updateLocationUI();
+        //updateLocationUI();
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
@@ -386,5 +387,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    //  Utility methods
+    void getMarkers() {
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+        allBMarkers = markerViewModel.getAllMarkers();
+        Log.i("Info", "getMarkers: " + allBMarkers.size());
     }
 }

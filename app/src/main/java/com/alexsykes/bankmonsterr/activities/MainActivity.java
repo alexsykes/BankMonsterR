@@ -213,9 +213,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             marker.add(String.valueOf(m.getMarker_id()));
             marker.add(String.valueOf(m.getLat()));
             marker.add(String.valueOf(m.getLng()));
-            marker.add(m.getType());
-            marker.add(m.getCode());
-            marker.add(m.getName());
+//            marker.add(m.getType());
+//            marker.add(m.getCode());
+//            marker.add(m.getName());
             marker.add(String.valueOf(m.isNew()));
             marker.add(String.valueOf(m.isUpdated()));
             markers.add(marker);

@@ -14,4 +14,5 @@
     <string name="current_marker">Current marker</string>
     <string name="details">Details</string>
     <string name="save">Save</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

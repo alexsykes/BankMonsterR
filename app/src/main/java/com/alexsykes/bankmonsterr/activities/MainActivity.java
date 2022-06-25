@@ -4,6 +4,7 @@ package com.alexsykes.bankmonsterr.activities;
 // https://normanaspx.medium.com/android-room-how-works-one-to-many-relationship-example-e8a17531a3bb
 
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -200,14 +201,19 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             LatLngBounds bounds =
                     builder.build();
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-           // mMap.setMaxZoomPreference(18);
+            // mMap.setMaxZoomPreference(18);
             if (allBMarkers.size() != 1) {
             }
         }
     }
 
+    /*  Set up map variables
+        Add listeners
+     */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        String marker_title, code, type;
+        LatLng latLng;
         mMap = googleMap;
         mMap.setOnMapLoadedCallback(this);
         mMap.setMinZoomPreference(8);
@@ -268,12 +274,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 }
         );
 
-        // mMap.setMaxZoomPreference(15);
-        String marker_title;
-        LatLng latLng;
-
+//         Check if saved markers are present
+//
         if (!allBMarkers.isEmpty()) {
-            String code, type;
 
             for (BMarker BMarker : allBMarkers) {
                 latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
@@ -335,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
          */
         try {
             if (locationPermissionGranted) {
-                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                @SuppressLint("MissingPermission") Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
                 locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
@@ -365,6 +368,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
      */
+    @SuppressLint("MissingPermission")
     private void updateLocationUI() {
         if (mMap == null) {
             return;

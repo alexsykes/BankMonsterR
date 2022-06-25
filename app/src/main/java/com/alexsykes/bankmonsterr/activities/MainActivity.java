@@ -49,7 +49,6 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback {
-
     MarkerViewModel markerViewModel;
     List<BMarker> allBMarkers;
     private GoogleMap mMap;
@@ -96,11 +95,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 markerDetailLayout.setVisibility(View.GONE);
                 saveButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
-//                int marker_id = current.getMarker_id();
-//                double lat = current.getLat();
-//                double lng = current.getLng();
-
-                // markerDao.updateMarker(marker_id,lat,lng);
             }
         });
         newMarkerButton = findViewById(R.id.newMarkerButton);
@@ -108,6 +102,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "onClick: New Marker");
+                LatLng centre = mMap.getCameraPosition().target;
+
+                MarkerOptions newMarker = new MarkerOptions()
+                        .position(centre)
+                        .draggable(true);
+                mMap.addMarker(newMarker);
             }
         });
 
@@ -182,28 +182,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
     }
 
-    @Override
-    public void onMapLoaded() {
-        Log.i("Info", "onMapLoaded: ");
-        if (!allBMarkers.isEmpty()) {
-            LatLng latLng;
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            int padding = 200;
-            String code;
-
-            for (BMarker BMarker : allBMarkers) {
-                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
-                builder.include(latLng);
-                code = BMarker.getCode();
-            }
-            LatLngBounds bounds =
-                    builder.build();
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-            // mMap.setMaxZoomPreference(18);
-            if (allBMarkers.size() != 1) {
-            }
-        }
-    }
 
     /*  Set up map variables
         Add listeners
@@ -237,15 +215,18 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                         // markerDetailLayout.setVisibility(View.GONE);
                         LatLng newpos = marker.getPosition();
                         String snippet = marker.getSnippet();
-                        String latStr = df.format(newpos.latitude);
-                        String lngStr = df.format(newpos.longitude);
-                        int marker_id = Integer.valueOf(marker.getSnippet());
-                        markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
-                                + System.lineSeparator() + "Marker id: " + snippet);
 
-                        curLat = newpos.latitude;
-                        curLng = newpos.longitude;
-                        curr_id = Integer.valueOf(snippet);
+                        if (snippet != null) {
+                            String latStr = df.format(newpos.latitude);
+                            String lngStr = df.format(newpos.longitude);
+                            int marker_id = Integer.valueOf(marker.getSnippet());
+                            markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                    + System.lineSeparator() + "Marker id: " + snippet);
+
+                            curLat = newpos.latitude;
+                            curLng = newpos.longitude;
+                            curr_id = Integer.valueOf(snippet);
+                        }
 
                         //   current = new BMarker(marker_id, newpos.latitude, newpos.longitude);
                     }
@@ -263,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                         String lngStr = df.format(startPos.longitude);
                         markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
                                 + System.lineSeparator() + "Marker id: " + snippet);
-
                     }
                 }
         );
@@ -310,6 +290,29 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
+    }
+
+    @Override
+    public void onMapLoaded() {
+        Log.i("Info", "onMapLoaded: ");
+        if (!allBMarkers.isEmpty()) {
+            LatLng latLng;
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            int padding = 200;
+            String code;
+
+            for (BMarker BMarker : allBMarkers) {
+                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
+                builder.include(latLng);
+                code = BMarker.getCode();
+            }
+            LatLngBounds bounds =
+                    builder.build();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+            // mMap.setMaxZoomPreference(18);
+            if (allBMarkers.size() != 1) {
+            }
+        }
     }
 
     private void getLocationPermission() {

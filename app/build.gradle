@@ -43,13 +43,14 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'androidx.preference:preference:1.2.0'
     annotationProcessor "androidx.room:room-compiler:2.4.2"
     androidTestImplementation "androidx.room:room-testing:2.4.2"
 
     // Lifecycle components
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$rootProject.lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata:$rootProject.lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycleVersion"
+//    implementation "androidx.lifecycle:lifecycle-viewmodel:$rootProject.lifecycleVersion"
+//    implementation "androidx.lifecycle:lifecycle-livedata:$rootProject.lifecycleVersion"
+//    implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycleVersion"
 
     // UI
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"

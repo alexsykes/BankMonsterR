@@ -16,13 +16,17 @@ public class BMarker {
 
 
     @NonNull
-    private final String  name;
+    private final String name;
     @NonNull
     private String code;
     @NonNull
     private String type;
     private int water_id;
     private double lat, lng;
+    //@ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
+    //String created;
+    //String updated;
+    boolean isUpdated, isNew;
 
     public int getMarker_id() {
         return marker_id;

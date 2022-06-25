@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             @Override
             public void onClick(View v) {
                 Log.i("Info", "Save button clicked.");
-                markerDao.updateMarker(curr_id, curLat, curLng);
+                markerDao.updateMarker(curr_id, curLat, curLng, true);
                 markerDetailLayout.setVisibility(View.GONE);
                 saveButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
@@ -101,6 +101,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         newMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // DialogFragment newFragment = new NewMarkerDialog();
+                // newFragment.show(getSupportFragmentManager(), "game");
+
                 Log.i(TAG, "onClick: New Marker");
                 LatLng centre = mMap.getCameraPosition().target;
 
@@ -216,16 +219,19 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                         LatLng newpos = marker.getPosition();
                         String snippet = marker.getSnippet();
 
-                        if (snippet != null) {
-                            String latStr = df.format(newpos.latitude);
-                            String lngStr = df.format(newpos.longitude);
-                            int marker_id = Integer.valueOf(marker.getSnippet());
-                            markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
-                                    + System.lineSeparator() + "Marker id: " + snippet);
 
-                            curLat = newpos.latitude;
-                            curLng = newpos.longitude;
+                        String latStr = df.format(newpos.latitude);
+                        String lngStr = df.format(newpos.longitude);
+                        markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                + System.lineSeparator() + "Marker id: " + snippet);
+
+                        curLat = newpos.latitude;
+                        curLng = newpos.longitude;
+
+                        if (snippet != null) {
                             curr_id = Integer.valueOf(snippet);
+                        } else {
+
                         }
 
                         //   current = new BMarker(marker_id, newpos.latitude, newpos.longitude);
@@ -398,4 +404,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         allBMarkers = markerViewModel.getAllMarkers();
         Log.i("Info", "getMarkers: " + allBMarkers.size());
     }
+
+
 }

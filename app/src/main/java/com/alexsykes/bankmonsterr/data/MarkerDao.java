@@ -28,4 +28,7 @@ public interface MarkerDao {
 
     @Query("UPDATE markers SET lat = :lat, lng = :lng, isUpdated = :isUpdated WHERE marker_id = :marker_id")
     void updateMarker(int marker_id, double lat, double lng, boolean isUpdated);
+
+    @Query("SELECT * FROM markers WHERE isUpdated = 1 OR isNew = 1")
+    List<BMarker> uploadChangesToServer();
 }

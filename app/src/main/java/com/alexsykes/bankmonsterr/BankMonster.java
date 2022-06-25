@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 public class BankMonster extends Application {
     boolean canConnect;
+    private static final String TAG = "Info";
 
     @Override
     public void onCreate() {

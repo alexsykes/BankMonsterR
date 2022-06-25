@@ -87,4 +87,12 @@ public class BMarker {
     public void setLng(double lng) {
         this.lng = lng;
     }
+
+    public boolean isUpdated() {
+        return isUpdated;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
 }

@@ -33,6 +33,13 @@ import com.alexsykes.bankmonsterr.data.WaterAndParents;
 import com.alexsykes.bankmonsterr.data.WaterRoomDatabase;
 import com.alexsykes.bankmonsterr.data.WaterViewModel;
 import com.alexsykes.bankmonsterr.utility.WaterListAdapter;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,8 +54,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONArray;
+
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback {
     MarkerViewModel markerViewModel;
@@ -96,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 markerDetailLayout.setVisibility(View.GONE);
                 saveButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
+                syncChangedData();
             }
         });
         newMarkerButton = findViewById(R.id.newMarkerButton);
@@ -132,8 +146,82 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         WaterViewModel waterViewModel = new ViewModelProvider(this).get(WaterViewModel.class);
         LiveData<List<WaterAndParents>> waterandparents = waterViewModel.getWaterAndParentList();
         waterandparents.observe(this, adapter::submitList);
-
         getMarkers();
+    }
+
+    void syncChangedData() {
+        String jsonStr = convertToJSON();
+        Log.i(TAG, "JSON: : " + jsonStr);
+
+        upload(jsonStr);
+
+    }
+
+    private void upload(String jsonStr) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = "https://android.alexsykes.com/uploadMarkerData.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Response: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                // request body goes here
+
+                String requestBody = jsonStr;
+                return requestBody.getBytes(StandardCharsets.UTF_8);
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+        };
+
+        Log.d("string", stringRequest.toString());
+        requestQueue.add(stringRequest);
+    }
+
+    String convertToJSON() {
+        WaterRoomDatabase db = WaterRoomDatabase.getDatabase(this);
+        MarkerDao markerDao = db.dao();
+
+        // Get changed data
+        List<BMarker> list = markerDao.uploadChangesToServer();
+
+        // Then conver to json
+        ArrayList<ArrayList<String>> markers = new ArrayList<ArrayList<String>>();
+        for (BMarker m : list) {
+
+            ArrayList<String> marker = new ArrayList();
+            marker.add(String.valueOf(m.getMarker_id()));
+            marker.add(String.valueOf(m.getLat()));
+            marker.add(String.valueOf(m.getLng()));
+            marker.add(m.getType());
+            marker.add(m.getCode());
+            marker.add(m.getName());
+            marker.add(String.valueOf(m.isNew()));
+            marker.add(String.valueOf(m.isUpdated()));
+            markers.add(marker);
+        }
+        JSONArray markerJSONArray = new JSONArray(markers);
+        return markerJSONArray.toString();
     }
 
     public void onClickCalled(int id, String water_name) {
@@ -183,7 +271,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             }
         }
     }
-
 
     /*  Set up map variables
         Add listeners
@@ -424,6 +511,4 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 .addToBackStack(null).commit();
 //        }
     }
-
-
 }

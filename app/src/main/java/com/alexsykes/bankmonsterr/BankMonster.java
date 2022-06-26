@@ -34,13 +34,13 @@ public class BankMonster extends Application {
         super.onCreate();
         Log.i("Info", "onCreateLaunch: ");
 
-        canConnect = canConnect();
-        if(canConnect) {
-            Log.i("Info", "Can connect");
-            getSavedData();
-        } else {
-            Log.i("Info", "Cannot connect");
-        }
+//        canConnect = canConnect();
+//        if(canConnect) {
+//            Log.i("Info", "Can connect");
+//            getSavedData();
+//        } else {
+//            Log.i("Info", "Cannot connect");
+//        }
         Log.i("Info", "onCreateLaunch: done ");
     }
 

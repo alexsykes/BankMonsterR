@@ -5,8 +5,11 @@ package com.alexsykes.bankmonsterr.activities;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +32,11 @@ import com.alexsykes.bankmonsterr.R;
 import com.alexsykes.bankmonsterr.data.BMarker;
 import com.alexsykes.bankmonsterr.data.MarkerDao;
 import com.alexsykes.bankmonsterr.data.MarkerViewModel;
+import com.alexsykes.bankmonsterr.data.Parent;
+import com.alexsykes.bankmonsterr.data.ParentDao;
+import com.alexsykes.bankmonsterr.data.Water;
 import com.alexsykes.bankmonsterr.data.WaterAndParents;
+import com.alexsykes.bankmonsterr.data.WaterDao;
 import com.alexsykes.bankmonsterr.data.WaterRoomDatabase;
 import com.alexsykes.bankmonsterr.data.WaterViewModel;
 import com.alexsykes.bankmonsterr.utility.WaterListAdapter;
@@ -55,6 +62,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -64,6 +73,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLoadedCallback, OnMapReadyCallback {
+    boolean canConnect;
     MarkerViewModel markerViewModel;
     List<BMarker> allBMarkers;
     private GoogleMap mMap;
@@ -78,20 +88,22 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final String TAG = "Info";
     private static final int DEFAULT_ZOOM = 15;
-    // private final LatLng defaultLocation = new LatLng(-53.59470125308922, -2.5608564913272858);
     private LatLng defaultLocation;
+
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
     private boolean locationPermissionGranted;
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
     private Location lastKnownLocation;
+    SupportMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(this);
         MarkerDao markerDao = db.dao();
+
 
 //        Set up UI components
         setContentView(R.layout.activity_main2);
@@ -137,10 +149,17 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        canConnect = canConnect();
+        if (canConnect) {
+            Log.i("Info", "Can connect");
+            getSavedData();
+        } else {
+            Log.i("Info", "Cannot connect");
+        }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        // mapFragment.getMapAsync(this);
 
         // Load saved data
         WaterViewModel waterViewModel = new ViewModelProvider(this).get(WaterViewModel.class);
@@ -149,81 +168,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         getMarkers();
     }
 
-    void syncChangedData() {
-        String jsonStr = convertToJSON();
-        Log.i(TAG, "JSON: : " + jsonStr);
-
-        upload(jsonStr);
-
-    }
-
-    private void upload(String jsonStr) {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "https://android.alexsykes.com/uploadMarkerData.php";
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Response: " + response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("VOLLEY", error.toString());
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                // request body goes here
-
-                String requestBody = jsonStr;
-                return requestBody.getBytes(StandardCharsets.UTF_8);
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
-                return params;
-            }
-        };
-
-        Log.d("string", stringRequest.toString());
-        requestQueue.add(stringRequest);
-    }
-
-    String convertToJSON() {
-        WaterRoomDatabase db = WaterRoomDatabase.getDatabase(this);
-        MarkerDao markerDao = db.dao();
-
-        // Get changed data
-        List<BMarker> list = markerDao.uploadChangesToServer();
-
-        // Then conver to json
-        ArrayList<ArrayList<String>> markers = new ArrayList<ArrayList<String>>();
-        for (BMarker m : list) {
-
-            ArrayList<String> marker = new ArrayList();
-            marker.add(String.valueOf(m.getMarker_id()));
-            marker.add(String.valueOf(m.getLat()));
-            marker.add(String.valueOf(m.getLng()));
-//            marker.add(m.getType());
-//            marker.add(m.getCode());
-//            marker.add(m.getName());
-            marker.add(String.valueOf(m.isNew()));
-            marker.add(String.valueOf(m.isUpdated()));
-            markers.add(marker);
-        }
-        JSONArray markerJSONArray = new JSONArray(markers);
-        return markerJSONArray.toString();
-    }
-
+    // Called from WaterViewHolder
     public void onClickCalled(int id, String water_name) {
         Log.i("Info", "onClickCalled: " + water_name + id);
         List<BMarker> BMarkerList = markerViewModel.getMarkerList(id);
@@ -250,27 +195,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
     }
 
-    private void showAllMarkers() {
-        if (!allBMarkers.isEmpty()) {
-            LatLng latLng;
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            int padding = 100;
-            String code;
-
-            for (BMarker BMarker : allBMarkers) {
-                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
-                builder.include(latLng);
-                code = BMarker.getCode();
-            }
-
-            LatLngBounds bounds =
-                    builder.build();
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-            if (allBMarkers.size() != 1) {
-                // mMap.resetMinMaxZoomPreference();
-            }
-        }
-    }
 
     /*  Set up map variables
         Add listeners
@@ -491,6 +415,101 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Log.i("Info", "getMarkers: " + allBMarkers.size());
     }
 
+    void syncChangedData() {
+        String jsonStr = convertToJSON();
+        Log.i(TAG, "JSON: : " + jsonStr);
+        upload(jsonStr);
+    }
+
+    private void showAllMarkers() {
+        if (!allBMarkers.isEmpty()) {
+            LatLng latLng;
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            int padding = 100;
+            String code;
+
+            for (BMarker BMarker : allBMarkers) {
+                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
+                builder.include(latLng);
+                code = BMarker.getCode();
+            }
+
+            LatLngBounds bounds =
+                    builder.build();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+            if (allBMarkers.size() != 1) {
+                // mMap.resetMinMaxZoomPreference();
+            }
+        }
+    }
+
+    private void upload(String jsonStr) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = "https://android.alexsykes.com/uploadMarkerData.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Response: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                // request body goes here
+
+                String requestBody = jsonStr;
+                return requestBody.getBytes(StandardCharsets.UTF_8);
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+        };
+
+        Log.d("string", stringRequest.toString());
+        requestQueue.add(stringRequest);
+    }
+
+    String convertToJSON() {
+        WaterRoomDatabase db = WaterRoomDatabase.getDatabase(this);
+        MarkerDao markerDao = db.dao();
+
+        // Get changed data
+        List<BMarker> list = markerDao.uploadChangesToServer();
+
+        // Then conver to json
+        ArrayList<ArrayList<String>> markers = new ArrayList<ArrayList<String>>();
+        for (BMarker m : list) {
+
+            ArrayList<String> marker = new ArrayList();
+            marker.add(String.valueOf(m.getMarker_id()));
+            marker.add(String.valueOf(m.getLat()));
+            marker.add(String.valueOf(m.getLng()));
+//            marker.add(m.getType());
+//            marker.add(m.getCode());
+//            marker.add(m.getName());
+            marker.add(String.valueOf(m.isNew()));
+            marker.add(String.valueOf(m.isUpdated()));
+            markers.add(marker);
+        }
+        JSONArray markerJSONArray = new JSONArray(markers);
+        return markerJSONArray.toString();
+    }
+
     public void showDialog() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         MarkerDetailFragment newFragment = new MarkerDetailFragment();
@@ -510,5 +529,121 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         transaction.add(android.R.id.content, newFragment)
                 .addToBackStack(null).commit();
 //        }
+    }
+
+
+    private void addDataToDb(String response) {
+
+        WaterRoomDatabase db = WaterRoomDatabase.getDatabase(getApplicationContext());
+        ParentDao parentDao = db.pdao();
+        MarkerDao markerDao = db.dao();
+        WaterDao waterDao = db.wdao();
+        Parent parent;
+        Water water;
+        BMarker BMarker;
+
+        JSONArray waters = new JSONArray();
+        JSONArray markers = new JSONArray();
+        JSONArray parents = new JSONArray();
+
+        try {
+            JSONArray jsonArray = new JSONArray(response);
+
+            Log.i("Info", "JSONArray: " + jsonArray.length());
+            waters = jsonArray.getJSONArray(0);
+            Log.i("Info", "Waters: " + waters.length());
+            markers = jsonArray.getJSONArray(1);
+            Log.i("Info", "Markers: " + markers.length());
+            parents = jsonArray.getJSONArray(2);
+            Log.i("Info", "Parents: " + parents.length());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        for (int index = 0; index < waters.length(); index++) {
+            try {
+                JSONObject theWater = new JSONObject(waters.get(index).toString());
+                String name = theWater.getString("name");
+                String type = theWater.getString("type");
+                int parent_id = theWater.getInt("parent_id");
+                int water_id = theWater.getInt("id");
+
+                water = new Water(water_id, name, type, parent_id);
+                waterDao.insertWater(water);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (int index = 0; index < parents.length(); index++) {
+            try {
+                JSONObject parentO = new JSONObject(parents.get(index).toString());
+                String name = parentO.getString("name");
+                String type = parentO.getString("type");
+                int id = parentO.getInt("id");
+
+                parent = new Parent(id, name, type);
+                parentDao.insertParent(parent);
+
+//                Log.i("Info", "Parent: " +  name + " " + type + " " + id);
+
+            } catch (JSONException e) {
+                Log.i("Info", "Error ");
+                e.printStackTrace();
+            }
+        }
+
+        for (int index = 0; index < markers.length(); index++) {
+            try {
+                JSONObject m = new JSONObject(markers.get(index).toString());
+                String name = m.getString("name");
+                String code = m.getString("code");
+                String type = m.getString("type");
+                int water_id = m.getInt("water_id");
+                int marker_id = m.getInt("id");
+                double lat = m.getDouble("latitude");
+                double lng = m.getDouble("longitude");
+
+                BMarker = new BMarker(marker_id, name, code, type, water_id, lat, lng);
+                markerDao.insertMarker(BMarker);
+
+            } catch (JSONException e) {
+                Log.i("Info", "Error ");
+                e.printStackTrace();
+            }
+        }
+
+        mapFragment.getMapAsync(this);
+    }
+
+    private void getSavedData() {
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this.getBaseContext());
+        String url = "https://android.alexsykes.com/getDataFromServer.php";
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        addDataToDb(response);
+                        // Log.i("Info", "onResponse: " + response.substring(0,150));
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Info", "That didn't work!");
+
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    protected boolean canConnect() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        @SuppressLint("MissingPermission") NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

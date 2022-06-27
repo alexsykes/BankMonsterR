@@ -96,16 +96,40 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
     private Location lastKnownLocation;
+    private MarkerDao markerDao;
+    private WaterViewModel waterViewModel;
+    private LiveData<List<WaterAndParents>> waterandparents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(this);
-        MarkerDao markerDao = db.dao();
+        markerDao = db.dao();
         getAllMarkers();
+        setupUIComponents();
 
+        // Construct a FusedLocationProviderClient.
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-//        Set up UI components
+        final WaterListAdapter adapter = new WaterListAdapter(new WaterListAdapter.WaterDiff());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        canConnect = canConnect();
+        if (canConnect) {
+            Log.i("Info", "Can connect");
+            getSavedData();
+        } else {
+            Log.i("Info", "Cannot connect");
+        }
+
+        // Load saved data
+        waterViewModel = new ViewModelProvider(this).get(WaterViewModel.class);
+        waterandparents = waterViewModel.getWaterAndParentList();
+        waterandparents.observe(this, adapter::submitList);
+    }
+
+    private void setupUIComponents() {
         setContentView(R.layout.activity_main2);
         markerDetailLayout = findViewById(R.id.markerDetailLayout);
         markerDetailLayout.setVisibility(View.GONE);
@@ -130,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             public void onClick(View view) {
                 //TODO - Dialog goes here
                 Log.i(TAG, "onClick: New Marker");
+                // new MarkerDialogFragment().show(getSupportFragmentManager(), MarkerDialogFragment.TAG);
+
                 LatLng centre = mMap.getCameraPosition().target;
 
                 MarkerOptions newMarker = new MarkerOptions()
@@ -141,30 +167,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
         recyclerView = findViewById(R.id.recyclerView);
 
-        // Construct a FusedLocationProviderClient.
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-
-        final WaterListAdapter adapter = new WaterListAdapter(new WaterListAdapter.WaterDiff());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        canConnect = canConnect();
-        if (canConnect) {
-            Log.i("Info", "Can connect");
-            getSavedData();
-        } else {
-            Log.i("Info", "Cannot connect");
-        }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        // mapFragment.getMapAsync(this);
-
-        // Load saved data
-        WaterViewModel waterViewModel = new ViewModelProvider(this).get(WaterViewModel.class);
-        LiveData<List<WaterAndParents>> waterandparents = waterViewModel.getWaterAndParentList();
-        waterandparents.observe(this, adapter::submitList);
     }
 
     // Called from WaterViewHolder
@@ -184,31 +189,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         updateMapBounds(bMarkerList);
     }
 
-    private void updateMapBounds(List<BMarker> bMarkerList) {
-        LatLng latLng;
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        int padding = 100;
-        String code;
-
-        for (BMarker BMarker : bMarkerList) {
-            latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
-            builder.include(latLng);
-            code = BMarker.getCode();
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(latLng);
-            mMap.addMarker(markerOptions);
-        }
-
-        LatLngBounds bounds =
-                builder.build();
-
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-
-    }
-
-    /*  Set up map variables
-        Add listeners
-     */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.i("Info", "onMapReady: ");
@@ -306,9 +286,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             LatLngBounds bounds =
                     builder.build();
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-            // mMap.setMaxZoomPreference(18);
-            if (bMarkerList.size() != 1) {
-            }
         }
     }
 
@@ -427,27 +404,28 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }
     }
-//    private void showAllMarkers() {
-//        if (!bMarkerList.isEmpty()) {
-//            LatLng latLng;
-//            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//            int padding = 100;
-//            String code;
-//
-//            for (BMarker BMarker : bMarkerList) {
-//                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
-//                builder.include(latLng);
-//                code = BMarker.getCode();
-//            }
-//
-//            LatLngBounds bounds =
-//                    builder.build();
-//            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-//            if (bMarkerList.size() != 1) {
-//                // mMap.resetMinMaxZoomPreference();
-//            }
-//        }
-//    }
+
+    private void updateMapBounds(List<BMarker> bMarkerList) {
+        LatLng latLng;
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        int padding = 100;
+        String code;
+
+        for (BMarker BMarker : bMarkerList) {
+            latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
+            builder.include(latLng);
+            code = BMarker.getCode();
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng);
+            mMap.addMarker(markerOptions);
+        }
+
+        LatLngBounds bounds =
+                builder.build();
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+
+    }
 
     private void syncChangedData() {
         String jsonStr = convertToJSON();

@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private WaterViewModel waterViewModel;
     private LiveData<List<WaterAndParents>> waterandparents;
     private int viewMode = 0;
+    private MarkerOptions newMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerDetailLayout.setVisibility(View.GONE);
         markerNameText = findViewById(R.id.markerNameText);
         markerDetailText = findViewById(R.id.markerDetailText);
+
         saveChangedMarkerButton = findViewById(R.id.saveChangedMarkerButton);
         saveNewMarkerButton = findViewById(R.id.saveNewMarkerButton);
         cancelNewMarkerButton = findViewById(R.id.cancelNewMarkerButton);
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         saveChangedMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("Info", "Save button clicked.");
+                Log.i("Info", "saveChangedMarkerButton clicked.");
                 markerDao.updateMarker(curr_id, curLat, curLng, true);
                 markerDetailLayout.setVisibility(View.GONE);
                 saveChangedMarkerButton.setVisibility(View.GONE);
@@ -162,11 +164,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             }
         });
 
-
         cancelChangedMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("Info", "Cancel changes button clicked.");
+                Log.i("Info", "cancelChangedMarkerButton clicked.");
                 markerDetailLayout.setVisibility(View.GONE);
                 saveChangedMarkerButton.setVisibility(View.GONE);
                 cancelChangedMarkerButton.setVisibility(View.GONE);
@@ -180,11 +181,14 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             public void onClick(View view) {
                 Log.i(TAG, "saveNewMarkerButton: ");
 
+
                 addMarkerLayout.setVisibility(View.GONE);
-                saveChangedMarkerButton.setVisibility(View.GONE);
-                cancelChangedMarkerButton.setVisibility(View.GONE);
+                saveNewMarkerButton.setVisibility(View.GONE);
+                cancelNewMarkerButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 newButton.setVisibility(View.VISIBLE);
+                saveNewMarker();
+
             }
         });
 
@@ -194,11 +198,13 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 Log.i(TAG, "cancelNewMarkerButton: ");
 
                 addMarkerLayout.setVisibility(View.GONE);
-                saveChangedMarkerButton.setVisibility(View.GONE);
-                cancelChangedMarkerButton.setVisibility(View.GONE);
+                saveNewMarkerButton.setVisibility(View.GONE);
+                cancelNewMarkerButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 newButton.setVisibility(View.VISIBLE);
-
+                newMarker.visible(false);
+                mMap.addMarker(newMarker);
+                Log.i(TAG, "onClick: " + newMarker.isVisible());
             }
         });
 
@@ -221,10 +227,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     saveNewMarkerButton.setVisibility(View.VISIBLE);
 
                     LatLng centre = mMap.getCameraPosition().target;
-
-                    MarkerOptions newMarker = new MarkerOptions()
+                    newMarker = new MarkerOptions()
                             .position(centre)
                             .draggable(true);
+
                     mMap.addMarker(newMarker);
                 } else {
                     Log.i(TAG, "onClick: New Water");
@@ -240,11 +246,16 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 .findFragmentById(R.id.map);
     }
 
+    private void saveNewMarker() {
+    }
+
     // Called from WaterViewHolder
     public void onWaterListItemClicked(int id, String water_name) {
         Log.i("Info", "onClickCalled: " + water_name + id);
         // Hide the list and show the
         // recyclerView.setVisibility(View.GONE);
+
+        boolean draggable = true;
         addMarkerLayout.setVisibility(View.GONE);
         markerDetailLayout.setVisibility(View.GONE);
         viewMode = 1;
@@ -254,9 +265,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         // If no markers, then display all
         if (bMarkerList.isEmpty()) {
             getAllMarkers();
+            draggable = false;
         }
         // Display markerList on map
-        addMarkerListToMap(bMarkerList);
+        addMarkerListToMap(bMarkerList, draggable);
         // Then update bounds
         updateMapBounds(bMarkerList);
     }
@@ -327,14 +339,25 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         );
 
         // MarkerClickListener
-        mMap.setOnMarkerClickListener(
-                marker -> {
-                    // marker.setVisible(!marker.isVisible());
-                    Log.i(TAG, "onMarkerClick: ");
-                    marker.showInfoWindow();
-                    return false;
-                }
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                          @Override
+                                          public boolean onMarkerClick(@NonNull Marker marker) {
+                                              // marker.setVisible(!marker.isVisible());
+                                              Log.i(TAG, "onMarkerClick: ");
+                                              marker.showInfoWindow();
+                                              return false;
+                                          }
+                                      }
         );
+
+//        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//            @Override
+//            public boolean onMarkerClick(@NonNull Marker marker) {
+//                Log.i(TAG, "onMarkerClick: id: " + marker.getId());
+//                marker.remove();
+//                return false;
+//            }
+//        });
 
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -343,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             }
         });
 
-        addMarkerListToMap(bMarkerList);
+        addMarkerListToMap(bMarkerList, false);
 
         getLocationPermission();
         getDeviceLocation();
@@ -453,10 +476,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Log.i("Info", "getMarkers: " + bMarkerList.size());
     }
 
-    private void addMarkerListToMap(List<BMarker> bMarkerList) {
+    private void addMarkerListToMap(List<BMarker> bMarkerList, boolean draggable) {
         List<BMarker> listForDisplay = bMarkerList;
         String marker_title, code, type;
         LatLng latLng;
+        boolean isDraggable;
+        isDraggable = draggable;
 //        if (listForDisplay.isEmpty()) {
 //            listForDisplay = markerViewModel.getAllMarkers();
 //        }
@@ -479,9 +504,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             } else {
                 markerOptions.visible(true);
             }
-            markerOptions.draggable(true);
+            markerOptions.draggable(draggable);
             mMap.addMarker(markerOptions);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            // mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng)); - Removed to prevent recentring of map
         }
     }
 

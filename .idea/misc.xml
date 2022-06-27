@@ -7,7 +7,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.229" />
         <entry key="app/src/main/res/layout/activity_all_waters.xml" value="0.21640625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.26979166666666665" />
-        <entry key="app/src/main/res/layout/activity_main2.xml" value="0.44526748971193414" />
+        <entry key="app/src/main/res/layout/activity_main2.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_new_water.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_water_detail.xml" value="0.1" />
@@ -30,7 +30,7 @@
   <component name="VisualizationToolProject">
     <option name="state">
       <ProjectState>
-        <option name="scale" value="0.31563786008230454" />
+        <option name="scale" value="0.44526748971193414" />
       </ProjectState>
     </option>
   </component>

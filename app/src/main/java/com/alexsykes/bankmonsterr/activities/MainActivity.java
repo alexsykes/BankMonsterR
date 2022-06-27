@@ -79,9 +79,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     boolean canConnect;
     MarkerViewModel markerViewModel;
     List<BMarker> bMarkerList;
-    LinearLayout markerDetailLayout;
+    LinearLayout markerDetailLayout, newMarkerLayout;
     TextView markerNameText, markerDetailText;
-    Button saveButton;
+    Button saveChangedMarkerButton, cancelChangedMarkerButton, saveNewMarkerButton, cancelNewMarkerButton;
     RecyclerView recyclerView;
     FloatingActionButton newButton;
     BMarker current;
@@ -132,23 +132,48 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     private void setupUIComponents() {
         setContentView(R.layout.activity_main2);
+        newMarkerLayout = findViewById(R.id.addMarkerLayout);
         markerDetailLayout = findViewById(R.id.markerDetailLayout);
+        newMarkerLayout.setVisibility(View.GONE);
         markerDetailLayout.setVisibility(View.GONE);
         markerNameText = findViewById(R.id.markerNameText);
         markerDetailText = findViewById(R.id.markerDetailText);
-        saveButton = findViewById(R.id.saveButton);
-        saveButton.setVisibility(View.GONE);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        saveChangedMarkerButton = findViewById(R.id.saveChangedMarkerButton);
+        saveNewMarkerButton = findViewById(R.id.saveNewMarkerButton);
+        cancelNewMarkerButton = findViewById(R.id.cancelNewMarkerButton);
+        cancelChangedMarkerButton = findViewById(R.id.cancelChangedMarkerButton);
+
+        saveChangedMarkerButton.setVisibility(View.GONE);
+        saveNewMarkerButton.setVisibility(View.GONE);
+        cancelChangedMarkerButton.setVisibility(View.GONE);
+        cancelNewMarkerButton.setVisibility(View.GONE);
+
+        saveChangedMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i("Info", "Save button clicked.");
                 markerDao.updateMarker(curr_id, curLat, curLng, true);
                 markerDetailLayout.setVisibility(View.GONE);
-                saveButton.setVisibility(View.GONE);
+                saveChangedMarkerButton.setVisibility(View.GONE);
+                cancelChangedMarkerButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 syncChangedData();
+                newButton.setVisibility(View.VISIBLE);
             }
         });
+
+        cancelChangedMarkerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Info", "Cancel changes button clicked.");
+                markerDetailLayout.setVisibility(View.GONE);
+                saveChangedMarkerButton.setVisibility(View.GONE);
+                cancelChangedMarkerButton.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                newButton.setVisibility(View.VISIBLE);
+            }
+        });
+
         newButton = findViewById(R.id.newMarkerButton);
         newButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +181,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 if (viewMode == 1) {
                     //TODO - Dialog goes here
                     Log.i(TAG, "onClick: New Marker");
-                    // new MarkerDialogFragment().show(getSupportFragmentManager(), MarkerDialogFragment.TAG);
+                    newMarkerLayout.setVisibility(View.VISIBLE);
+                    cancelNewMarkerButton.setVisibility(View.VISIBLE);
+                    saveNewMarkerButton.setVisibility(View.VISIBLE);
 
                     LatLng centre = mMap.getCameraPosition().target;
 
@@ -171,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         });
 
         recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setVisibility(View.VISIBLE);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -180,7 +208,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     // Called from WaterViewHolder
     public void onWaterListItemClicked(int id, String water_name) {
         Log.i("Info", "onClickCalled: " + water_name + id);
-
+        // Hide the list and show the
+        // recyclerView.setVisibility(View.GONE);
+        newMarkerLayout.setVisibility(View.GONE);
+        markerDetailLayout.setVisibility(View.GONE);
         viewMode = 1;
         // Get markerList for water_id
         bMarkerList = markerViewModel.getMarkerListForWater(id);
@@ -239,15 +270,15 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                         } else {
 
                         }
-
-                        //   current = new BMarker(marker_id, newpos.latitude, newpos.longitude);
                     }
 
                     @Override
                     public void onMarkerDragStart(@NonNull Marker marker) {
                         markerDetailLayout.setVisibility(View.VISIBLE);
-                        saveButton.setVisibility(View.VISIBLE);
+                        saveChangedMarkerButton.setVisibility(View.VISIBLE);
+                        cancelChangedMarkerButton.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);
+                        newButton.setVisibility(View.GONE);
 
                         markerNameText.setText(marker.getTitle());
                         startPos = marker.getPosition();

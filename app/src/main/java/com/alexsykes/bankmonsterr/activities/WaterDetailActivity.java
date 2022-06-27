@@ -79,7 +79,7 @@ public class WaterDetailActivity extends AppCompatActivity implements
     }
 
     void getMarkers() {
-        BMarkerList = markerViewModel.getMarkerList(water_id);
+        BMarkerList = markerViewModel.getMarkerListForWater(water_id);
         RecyclerView rv = findViewById(R.id.markerRecyclerView);
         final MarkerListAdapter adapter = new MarkerListAdapter(BMarkerList);
         rv.setAdapter(adapter);

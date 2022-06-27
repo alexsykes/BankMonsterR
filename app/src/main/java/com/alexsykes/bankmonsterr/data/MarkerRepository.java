@@ -37,7 +37,7 @@ public class MarkerRepository {
         return markersForWater;
     }
 
-    public List<BMarker> getMarkerList(int water_id) {
-        return dao.getAllMarkerList(water_id);
+    public List<BMarker> getMarkerListForWater(int water_id) {
+        return dao.getMarkerListForWater(water_id);
     }
 }

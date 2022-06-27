@@ -23,8 +23,8 @@ public class MarkerViewModel extends AndroidViewModel {
         markerRepository.insert(BMarker);
     }
 
-    public List<BMarker> getMarkerList(int water_id) {
-        BMarkerList = markerRepository.getMarkerList(water_id);
+    public List<BMarker> getMarkerListForWater(int water_id) {
+        BMarkerList = markerRepository.getMarkerListForWater(water_id);
         return BMarkerList;
     }
 

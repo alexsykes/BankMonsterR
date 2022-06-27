@@ -171,30 +171,34 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     // Called from WaterViewHolder
     public void onClickCalled(int id, String water_name) {
         Log.i("Info", "onClickCalled: " + water_name + id);
-        List<BMarker> BMarkerList = markerViewModel.getMarkerList(id);
-        if (!BMarkerList.isEmpty()) {
+        List<BMarker> markerListForWater = markerViewModel.getMarkerListForWater(id);
+        if (!markerListForWater.isEmpty()) {
+            mMap.clear();
+            addMarkerListToMap(markerListForWater);
             LatLng latLng;
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             int padding = 100;
             String code;
 
-            for (BMarker BMarker : BMarkerList) {
+            for (BMarker BMarker : markerListForWater) {
                 latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
                 builder.include(latLng);
                 code = BMarker.getCode();
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(latLng);
+                mMap.addMarker(markerOptions);
             }
 
             LatLngBounds bounds =
                     builder.build();
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-            if (BMarkerList.size() != 1) {
+            if (markerListForWater.size() != 1) {
                 // mMap.resetMinMaxZoomPreference();
             }
         } else {
             showAllMarkers();
         }
     }
-
 
     /*  Set up map variables
         Add listeners
@@ -414,13 +418,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         allBMarkers = markerViewModel.getAllMarkers();
         Log.i("Info", "getMarkers: " + allBMarkers.size());
     }
-
-    void syncChangedData() {
-        String jsonStr = convertToJSON();
-        Log.i(TAG, "JSON: : " + jsonStr);
-        upload(jsonStr);
-    }
-
     private void showAllMarkers() {
         if (!allBMarkers.isEmpty()) {
             LatLng latLng;
@@ -441,6 +438,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 // mMap.resetMinMaxZoomPreference();
             }
         }
+    }
+
+    void syncChangedData() {
+        String jsonStr = convertToJSON();
+        Log.i(TAG, "JSON: : " + jsonStr);
+        upload(jsonStr);
     }
 
     private void upload(String jsonStr) {
@@ -615,6 +618,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         }
 
         mapFragment.getMapAsync(this);
+    }
+
+    private void addMarkerListToMap(List<BMarker> bMarkerList) {
+
     }
 
     private void getSavedData() {

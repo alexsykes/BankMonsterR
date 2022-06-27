@@ -24,7 +24,7 @@ public interface MarkerDao {
     LiveData<List<BMarker>> getAllMarkersForWater(int water_id);
 
     @Query("SELECT * FROM markers WHERE water_id = :water_id ORDER BY name ASC")
-    List<BMarker> getAllMarkerList(int water_id);
+    List<BMarker> getMarkerListForWater(int water_id);
 
     @Query("UPDATE markers SET lat = :lat, lng = :lng, isUpdated = :isUpdated WHERE marker_id = :marker_id")
     void updateMarker(int marker_id, double lat, double lng, boolean isUpdated);

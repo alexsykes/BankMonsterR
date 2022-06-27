@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     TextView markerNameText, markerDetailText;
     Button saveButton;
     RecyclerView recyclerView;
-    FloatingActionButton newMarkerButton;
+    FloatingActionButton newButton;
     BMarker current;
     double curLng, curLat;
     int curr_id;
@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private MarkerDao markerDao;
     private WaterViewModel waterViewModel;
     private LiveData<List<WaterAndParents>> waterandparents;
+    private int viewMode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,20 +149,24 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 syncChangedData();
             }
         });
-        newMarkerButton = findViewById(R.id.newMarkerButton);
-        newMarkerButton.setOnClickListener(new View.OnClickListener() {
+        newButton = findViewById(R.id.newMarkerButton);
+        newButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO - Dialog goes here
-                Log.i(TAG, "onClick: New Marker");
-                // new MarkerDialogFragment().show(getSupportFragmentManager(), MarkerDialogFragment.TAG);
+                if (viewMode == 1) {
+                    //TODO - Dialog goes here
+                    Log.i(TAG, "onClick: New Marker");
+                    // new MarkerDialogFragment().show(getSupportFragmentManager(), MarkerDialogFragment.TAG);
 
-                LatLng centre = mMap.getCameraPosition().target;
+                    LatLng centre = mMap.getCameraPosition().target;
 
-                MarkerOptions newMarker = new MarkerOptions()
-                        .position(centre)
-                        .draggable(true);
-                mMap.addMarker(newMarker);
+                    MarkerOptions newMarker = new MarkerOptions()
+                            .position(centre)
+                            .draggable(true);
+                    mMap.addMarker(newMarker);
+                } else {
+                    Log.i(TAG, "onClick: New Water");
+                }
             }
         });
 
@@ -176,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     public void onWaterListItemClicked(int id, String water_name) {
         Log.i("Info", "onClickCalled: " + water_name + id);
 
+        viewMode = 1;
         // Get markerList for water_id
         bMarkerList = markerViewModel.getMarkerListForWater(id);
 

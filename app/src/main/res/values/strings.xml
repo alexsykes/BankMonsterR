@@ -33,4 +33,6 @@
     <string name="new_marker">New Marker</string>
     <string name="cancel">Cancel</string>
     <string name="marker_detail">Marker detail</string>
+    <string name="marker_name">Name</string>
+    <string name="marker_code">Code</string>
 </resources>

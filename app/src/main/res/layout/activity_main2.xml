@@ -62,7 +62,8 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/big_padding"
             android:text="@string/details"
-            android:textColor="@color/purple_700" />
+            android:textColor="@color/purple_700"
+            tools:ignore="TextContrastCheck" />
     </LinearLayout>
 
     <Button
@@ -75,7 +76,7 @@
         android:text="@string/save"
         app:layout_constraintEnd_toEndOf="@+id/map"
         app:layout_constraintTop_toBottomOf="@+id/markerDetailLayout"
-        tools:ignore="TextContrastCheck" />
+        tools:ignore="TextContrastCheck,DuplicateSpeakableTextCheck" />
 
     <LinearLayout
         android:id="@+id/addMarkerLayout"
@@ -108,7 +109,9 @@
             android:hint="@string/marker_name"
             android:inputType="textPersonName|textCapWords"
             android:minHeight="48dp"
-            android:textColor="@color/purple_700" />
+            android:importantForAutofill="no"
+            android:textColor="@color/purple_700"
+            tools:ignore="TextContrastCheck" />
 
         <EditText
             android:id="@+id/editMarkerCode"
@@ -119,7 +122,9 @@
             android:inputType="textCapCharacters"
             android:minHeight="48dp"
             android:text=""
-            android:textColor="@color/purple_700" />
+            android:importantForAutofill="no"
+            android:textColor="@color/purple_700"
+            tools:ignore="TextContrastCheck" />
     </LinearLayout>
 
     <Button
@@ -141,7 +146,8 @@
         android:layout_marginTop="8dp"
         android:text="@string/cancel"
         app:layout_constraintStart_toStartOf="@+id/addMarkerLayout"
-        app:layout_constraintTop_toBottomOf="@+id/addMarkerLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/addMarkerLayout"
+        tools:ignore="DuplicateSpeakableTextCheck" />
 
 
     <Button
@@ -160,7 +166,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:clickable="true"
-        android:contentDescription="Add a new Marker"
+        android:contentDescription="@string/add_marker"
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

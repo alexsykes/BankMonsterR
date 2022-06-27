@@ -31,6 +31,7 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="type">type</string>
     <string name="new_marker">New Marker</string>
+    <string name="add_marker">Add a new marker</string>
     <string name="cancel">Cancel</string>
     <string name="marker_detail">Marker detail</string>
     <string name="marker_name">Name</string>

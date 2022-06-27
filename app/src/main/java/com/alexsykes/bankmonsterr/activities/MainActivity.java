@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     boolean canConnect;
     MarkerViewModel markerViewModel;
     List<BMarker> bMarkerList;
-    LinearLayout markerDetailLayout, newMarkerLayout;
+    LinearLayout markerDetailLayout, addMarkerLayout;
     TextView markerNameText, markerDetailText;
     Button saveChangedMarkerButton, cancelChangedMarkerButton, saveNewMarkerButton, cancelNewMarkerButton;
     RecyclerView recyclerView;
@@ -132,9 +132,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
     private void setupUIComponents() {
         setContentView(R.layout.activity_main2);
-        newMarkerLayout = findViewById(R.id.addMarkerLayout);
+        addMarkerLayout = findViewById(R.id.addMarkerLayout);
         markerDetailLayout = findViewById(R.id.markerDetailLayout);
-        newMarkerLayout.setVisibility(View.GONE);
+        addMarkerLayout.setVisibility(View.GONE);
         markerDetailLayout.setVisibility(View.GONE);
         markerNameText = findViewById(R.id.markerNameText);
         markerDetailText = findViewById(R.id.markerDetailText);
@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             }
         });
 
+
         cancelChangedMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,6 +175,40 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             }
         });
 
+        saveNewMarkerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "saveNewMarkerButton: ");
+
+                addMarkerLayout.setVisibility(View.GONE);
+                saveChangedMarkerButton.setVisibility(View.GONE);
+                cancelChangedMarkerButton.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                newButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        cancelNewMarkerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "cancelNewMarkerButton: ");
+
+                addMarkerLayout.setVisibility(View.GONE);
+                saveChangedMarkerButton.setVisibility(View.GONE);
+                cancelChangedMarkerButton.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                newButton.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        /* Set up FAB
+            Mode 1 -  Water view
+            Add a new marker
+            addMarkerLayout, saveNewMarkerButton, cancelNewMarkerButton - VISIBLE
+            markerDetailLayout, saveChangedMarkerButton, cancelChangedMarkerButton - GONE
+         */
+
         newButton = findViewById(R.id.newMarkerButton);
         newButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 if (viewMode == 1) {
                     //TODO - Dialog goes here
                     Log.i(TAG, "onClick: New Marker");
-                    newMarkerLayout.setVisibility(View.VISIBLE);
+                    addMarkerLayout.setVisibility(View.VISIBLE);
                     cancelNewMarkerButton.setVisibility(View.VISIBLE);
                     saveNewMarkerButton.setVisibility(View.VISIBLE);
 
@@ -210,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         Log.i("Info", "onClickCalled: " + water_name + id);
         // Hide the list and show the
         // recyclerView.setVisibility(View.GONE);
-        newMarkerLayout.setVisibility(View.GONE);
+        addMarkerLayout.setVisibility(View.GONE);
         markerDetailLayout.setVisibility(View.GONE);
         viewMode = 1;
         // Get markerList for water_id
@@ -295,10 +330,18 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         mMap.setOnMarkerClickListener(
                 marker -> {
                     // marker.setVisible(!marker.isVisible());
-                    // marker.showInfoWindow();
+                    Log.i(TAG, "onMarkerClick: ");
+                    marker.showInfoWindow();
                     return false;
                 }
         );
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(@NonNull LatLng latLng) {
+                Log.i(TAG, "onMapLongClick: ");
+            }
+        });
 
         addMarkerListToMap(bMarkerList);
 

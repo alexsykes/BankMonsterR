@@ -1,7 +1,6 @@
 package com.alexsykes.bankmonsterr.utility;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,7 @@ public class WaterViewHolder extends RecyclerView.ViewHolder {
         // Log.i("Info", "bind: " + water_id);
         itemView.setOnClickListener(v -> {
             Context context = itemView.getContext();
-            ((MainActivity) context).onClickCalled(water_id, water_name);
+            ((MainActivity) context).onWaterListItemClicked(water_id, water_name);
         });
     }
 

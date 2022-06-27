@@ -171,39 +171,39 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     public void onWaterListItemClicked(int id, String water_name) {
         Log.i("Info", "onClickCalled: " + water_name + id);
 
-        // Get markerList
-        List<BMarker> markerListForWater = markerViewModel.getMarkerListForWater(id);
+        // Get markerList for water_id
+        bMarkerList = markerViewModel.getMarkerListForWater(id);
 
+        // If no markers, then display all
+        if (bMarkerList.isEmpty()) {
+            getAllMarkers();
+        }
         // Display markerList on map
-        addMarkerListToMap(markerListForWater);
+        addMarkerListToMap(bMarkerList);
+        // Then update bounds
+        updateMapBounds(bMarkerList);
+    }
 
-        // Update Camera position
-//        if (!markerListForWater.isEmpty()) {
-//            mMap.clear();
-//            addMarkerListToMap(markerListForWater);
-//            LatLng latLng;
-//            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//            int padding = 100;
-//            String code;
-//
-//            for (BMarker BMarker : markerListForWater) {
-//                latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
-//                builder.include(latLng);
-//                code = BMarker.getCode();
-//                MarkerOptions markerOptions = new MarkerOptions()
-//                        .position(latLng);
-//                mMap.addMarker(markerOptions);
-//            }
-//
-//            LatLngBounds bounds =
-//                    builder.build();
-//            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-//            if (markerListForWater.size() != 1) {
-//                // mMap.resetMinMaxZoomPreference();
-//            }
-//        } else {
-//            showAllMarkers();
-//        }
+    private void updateMapBounds(List<BMarker> bMarkerList) {
+        LatLng latLng;
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        int padding = 100;
+        String code;
+
+        for (BMarker BMarker : bMarkerList) {
+            latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
+            builder.include(latLng);
+            code = BMarker.getCode();
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng);
+            mMap.addMarker(markerOptions);
+        }
+
+        LatLngBounds bounds =
+                builder.build();
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+
     }
 
     /*  Set up map variables
@@ -400,9 +400,9 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         List<BMarker> listForDisplay = bMarkerList;
         String marker_title, code, type;
         LatLng latLng;
-        if (listForDisplay.isEmpty()) {
-            listForDisplay = markerViewModel.getAllMarkers();
-        }
+//        if (listForDisplay.isEmpty()) {
+//            listForDisplay = markerViewModel.getAllMarkers();
+//        }
         mMap.clear();
         for (BMarker BMarker : listForDisplay) {
             latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
@@ -449,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 //        }
 //    }
 
-    void syncChangedData() {
+    private void syncChangedData() {
         String jsonStr = convertToJSON();
         Log.i(TAG, "JSON: : " + jsonStr);
         upload(jsonStr);
@@ -496,7 +496,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         requestQueue.add(stringRequest);
     }
 
-    String convertToJSON() {
+    private String convertToJSON() {
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(this);
         MarkerDao markerDao = db.dao();
 
@@ -522,7 +522,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         return markerJSONArray.toString();
     }
 
-    public void showDialog() {
+    private void showDialog() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         MarkerDetailFragment newFragment = new MarkerDetailFragment();
 
@@ -542,7 +542,6 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 .addToBackStack(null).commit();
 //        }
     }
-
 
     private void addDataToDb(String response) {
 

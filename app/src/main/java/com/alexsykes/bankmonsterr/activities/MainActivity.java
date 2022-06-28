@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         super.onCreate(savedInstanceState);
         WaterRoomDatabase db = WaterRoomDatabase.getDatabase(this);
         markerDao = db.dao();
-        getAllMarkers();
+        bMarkerList = getAllMarkers();
         setupUIComponents();
 
         // Construct a FusedLocationProviderClient.
@@ -168,6 +168,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 saveChangedMarkerButton.setVisibility(View.GONE);
                 cancelChangedMarkerButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
+//                List<BMarker> markerList = getMarkersForWater(water_id);
+//                addMarkerListToMap(markerList,true);
+//                updateMapBounds(markerList);
+                addMarkersToMap(water_id, true);
                 syncChangedData();
                 newButton.setVisibility(View.VISIBLE);
             }
@@ -180,6 +184,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 markerDetailLayout.setVisibility(View.GONE);
                 saveChangedMarkerButton.setVisibility(View.GONE);
                 cancelChangedMarkerButton.setVisibility(View.GONE);
+//                List<BMarker> markerList = getMarkersForWater(water_id);
+//                addMarkerListToMap(markerList,true);
+//                updateMapBounds(markerList);
+                addMarkersToMap(water_id, true);
                 recyclerView.setVisibility(View.VISIBLE);
                 newButton.setVisibility(View.VISIBLE);
             }
@@ -194,7 +202,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 cancelNewMarkerButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 newButton.setVisibility(View.VISIBLE);
-                saveNewMarker();        //MARK: MarkerDragListener
+                saveNewMarker();
+//                List<BMarker> markerList = getMarkersForWater(water_id);
+//                addMarkerListToMap(markerList,true);
+//                updateMapBounds(markerList);
+                addMarkersToMap(water_id, true);
+                //MARK: MarkerDragListener
                 mMap.setOnMarkerDragListener(
                         new GoogleMap.OnMarkerDragListener() {
                             final DecimalFormat df = new DecimalFormat("#.#####");
@@ -262,6 +275,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 cancelNewMarkerButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 // Restore normal drag functionality to markers
+//                List<BMarker> markerList = getMarkersForWater(water_id);
+//                addMarkerListToMap(markerList,true);
+//                updateMapBounds(markerList);
+                addMarkersToMap(water_id, true);
                 mMap.setOnMarkerDragListener(
                         new GoogleMap.OnMarkerDragListener() {
                             final DecimalFormat df = new DecimalFormat("#.#####");
@@ -387,12 +404,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     }
 
     private void saveNewMarker() {
-        LatLng latLng = newMarker.getPosition();
         String markerName = editMarkerName.getText().toString();
         String code = editMarkerCode.getText().toString();
         Button selected = findViewById(typeGroup.getCheckedRadioButtonId());
         String type = selected.getText().toString();
-
         markerViewModel.insert(new BMarker(-999, markerName, code, type, water_id, curLat, curLng));
     }
 
@@ -404,22 +419,23 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
 
         this.water_id = water_id;
         this.water_name = water_name;
-        boolean draggable = true;
         addMarkerLayout.setVisibility(View.GONE);
         markerDetailLayout.setVisibility(View.GONE);
         viewMode = 1;
-        // Get markerList for water_id
-        bMarkerList = markerViewModel.getMarkerListForWater(water_id);
 
-        // If no markers, then display all
-        if (bMarkerList.isEmpty()) {
-            getAllMarkers();
-            draggable = false;
-        }
+        addMarkersToMap(water_id, true);
+        // Get markerList for water_id
+//        bMarkerList = markerViewModel.getMarkerListForWater(water_id);
+//
+//        // If no markers, then display all
+//        if (bMarkerList.isEmpty()) {
+//            bMarkerList = getAllMarkers();
+//            draggable = false;
+//        }
         // Display markerList on map
-        addMarkerListToMap(bMarkerList, draggable);
+//        addMarkerListToMap(bMarkerList, draggable);
         // Then update bounds
-        updateMapBounds(bMarkerList);
+//        updateMapBounds(bMarkerList);
     }
 
     @Override
@@ -518,9 +534,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 Log.i(TAG, "onMapLongClick: ");
             }
         });
-
-        addMarkerListToMap(bMarkerList, false);
-
+        // addMarkerListToMap(bMarkerList, false);
+        addMarkersToMap(0, false);
         getLocationPermission();
         getDeviceLocation();
     }
@@ -623,23 +638,86 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     }
 
     //  Utility methods
-    void getAllMarkers() {
+    List<BMarker> getAllMarkers() {
         markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
         bMarkerList = markerViewModel.getAllMarkers();
         Log.i("Info", "getMarkers: " + bMarkerList.size());
+        return bMarkerList;
     }
 
-    private void addMarkerListToMap(List<BMarker> bMarkerList, boolean draggable) {
-        List<BMarker> listForDisplay = bMarkerList;
+    List<BMarker> getMarkersForWater(int water_id) {
+        markerViewModel = new ViewModelProvider(this).get(MarkerViewModel.class);
+        if (water_id == 0) {
+            return markerViewModel.getAllMarkers();
+        } else {
+            return markerViewModel.getMarkerListForWater(water_id);
+        }
+    }
+
+//    private void addMarkerListToMap(List<BMarker> bMarkerList, boolean draggable) {
+//        List<BMarker> listForDisplay = bMarkerList;
+//        String marker_title, code, type;
+//        LatLng latLng;
+////        boolean isDraggable;
+////        isDraggable = draggable;
+////        if (listForDisplay.isEmpty()) {
+////            listForDisplay = markerViewModel.getAllMarkers();
+////        }
+//        mMap.clear();
+//        for (BMarker BMarker : listForDisplay) {
+//            latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
+//            code = BMarker.getCode();
+//            type = BMarker.getType();
+//            String snippet = String.valueOf(BMarker.getMarker_id());
+//
+//            marker_title = BMarker.getName() + " " + code;
+//            MarkerOptions markerOptions = new MarkerOptions()
+//                    .position(latLng)
+//                    .title(marker_title)
+//                    .snippet(snippet)
+//                    .visible(true);
+//
+//            if (type.equals("Car park")) {
+//                markerOptions.visible(true);
+//            } else {
+//                markerOptions.visible(true);
+//            }
+//            markerOptions.draggable(draggable);
+//            mMap.addMarker(markerOptions);
+//            // mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng)); - Removed to prevent recentring of map
+//        }
+//    }
+
+//    private void updateMapBounds(List<BMarker> bMarkerList) {
+//        LatLng latLng;
+//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//        int padding = 200;
+//
+//        for (BMarker BMarker : bMarkerList) {
+//            latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
+//            builder.include(latLng);
+//        }
+//
+//        LatLngBounds bounds =
+//                builder.build();
+//        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+//    }
+
+    private void addMarkersToMap(int water_id, boolean draggable) {
+        boolean isDraggable = draggable;
+        List<BMarker> markers = getMarkersForWater(water_id);
+        if (markers.size() == 0) {
+            markers = getAllMarkers();
+            isDraggable = false;
+        }
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        int padding = 200;
         String marker_title, code, type;
         LatLng latLng;
-//        boolean isDraggable;
-//        isDraggable = draggable;
-//        if (listForDisplay.isEmpty()) {
-//            listForDisplay = markerViewModel.getAllMarkers();
-//        }
+
         mMap.clear();
-        for (BMarker BMarker : listForDisplay) {
+        for (BMarker BMarker : markers) {
             latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
             code = BMarker.getCode();
             type = BMarker.getType();
@@ -657,22 +735,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             } else {
                 markerOptions.visible(true);
             }
-            markerOptions.draggable(draggable);
+            markerOptions.draggable(isDraggable);
             mMap.addMarker(markerOptions);
-            // mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng)); - Removed to prevent recentring of map
-        }
-    }
-
-    private void updateMapBounds(List<BMarker> bMarkerList) {
-        LatLng latLng;
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        int padding = 200;
-
-        for (BMarker BMarker : bMarkerList) {
-            latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
             builder.include(latLng);
         }
-
         LatLngBounds bounds =
                 builder.build();
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));

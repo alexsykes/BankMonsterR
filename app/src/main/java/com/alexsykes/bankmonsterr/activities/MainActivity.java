@@ -180,15 +180,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "saveNewMarkerButton: ");
-
-
                 addMarkerLayout.setVisibility(View.GONE);
                 saveNewMarkerButton.setVisibility(View.GONE);
                 cancelNewMarkerButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 newButton.setVisibility(View.VISIBLE);
                 saveNewMarker();
-
             }
         });
 
@@ -196,14 +193,11 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "cancelNewMarkerButton: ");
-
                 addMarkerLayout.setVisibility(View.GONE);
                 saveNewMarkerButton.setVisibility(View.GONE);
                 cancelNewMarkerButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 newButton.setVisibility(View.VISIBLE);
-                newMarker.visible(false);
-                mMap.addMarker(newMarker);
                 Log.i(TAG, "onClick: " + newMarker.isVisible());
             }
         });
@@ -225,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     addMarkerLayout.setVisibility(View.VISIBLE);
                     cancelNewMarkerButton.setVisibility(View.VISIBLE);
                     saveNewMarkerButton.setVisibility(View.VISIBLE);
+                    newButton.setVisibility(View.GONE);
 
                     LatLng centre = mMap.getCameraPosition().target;
                     newMarker = new MarkerOptions()
@@ -277,9 +272,12 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.i("Info", "onMapReady: ");
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         mMap.setOnMapLoadedCallback(this);
         mMap.setMinZoomPreference(8);
         mMap.setMaxZoomPreference(20);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
 
         //MARK: MarkerDragListener
         mMap.setOnMarkerDragListener(
@@ -480,8 +478,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         List<BMarker> listForDisplay = bMarkerList;
         String marker_title, code, type;
         LatLng latLng;
-        boolean isDraggable;
-        isDraggable = draggable;
+//        boolean isDraggable;
+//        isDraggable = draggable;
 //        if (listForDisplay.isEmpty()) {
 //            listForDisplay = markerViewModel.getAllMarkers();
 //        }
@@ -513,22 +511,16 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private void updateMapBounds(List<BMarker> bMarkerList) {
         LatLng latLng;
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        int padding = 100;
-        String code;
+        int padding = 200;
 
         for (BMarker BMarker : bMarkerList) {
             latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
             builder.include(latLng);
-//            code = BMarker.getCode();
-//            MarkerOptions markerOptions = new MarkerOptions()
-//                    .position(latLng);
-//            mMap.addMarker(markerOptions);
         }
 
         LatLngBounds bounds =
                 builder.build();
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-
     }
 
     private void syncChangedData() {

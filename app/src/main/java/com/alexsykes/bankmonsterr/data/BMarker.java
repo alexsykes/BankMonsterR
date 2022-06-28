@@ -33,7 +33,9 @@ public class BMarker {
     }
 
     public BMarker(int marker_id, @NonNull String name, @NonNull String code, @NonNull String type, int water_id, double lat, double lng) {
-        this.marker_id = marker_id;
+        if (marker_id != -999) {
+            this.marker_id = marker_id;
+        }
         this.name = name;
         this.code = code;
         this.type = type;
@@ -41,6 +43,7 @@ public class BMarker {
         this.lat = lat;
         this.lng = lng;
     }
+
 
     @NonNull
     public String getName() {

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -77,10 +78,13 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     private static final String TAG = "Info";
     private static final int DEFAULT_ZOOM = 15;
     boolean canConnect;
+    String water_name;
+    int water_id;
     MarkerViewModel markerViewModel;
     List<BMarker> bMarkerList;
     LinearLayout markerDetailLayout, addMarkerLayout;
     TextView markerNameText, markerDetailText;
+    EditText editMarkerName, editMarkerCode;
     Button saveChangedMarkerButton, cancelChangedMarkerButton, saveNewMarkerButton, cancelNewMarkerButton;
     RecyclerView recyclerView;
     FloatingActionButton newButton;
@@ -139,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerDetailLayout.setVisibility(View.GONE);
         markerNameText = findViewById(R.id.markerNameText);
         markerDetailText = findViewById(R.id.markerDetailText);
+        editMarkerCode = findViewById(R.id.editMarkerCode);
+        editMarkerName = findViewById(R.id.editMarkerName);
 
         saveChangedMarkerButton = findViewById(R.id.saveChangedMarkerButton);
         saveNewMarkerButton = findViewById(R.id.saveNewMarkerButton);
@@ -185,7 +191,62 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 cancelNewMarkerButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 newButton.setVisibility(View.VISIBLE);
-                saveNewMarker();
+                saveNewMarker();        //MARK: MarkerDragListener
+                mMap.setOnMarkerDragListener(
+                        new GoogleMap.OnMarkerDragListener() {
+                            final DecimalFormat df = new DecimalFormat("#.#####");
+                            LatLng startPos, endPos;
+
+                            @Override
+                            public void onMarkerDrag(@NonNull Marker marker) {
+                                LatLng newpos = marker.getPosition();
+                                String snippet = marker.getSnippet();
+                                String latStr = df.format(newpos.latitude);
+                                String lngStr = df.format(newpos.longitude);
+                                markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                        + System.lineSeparator() + "Marker id: " + snippet);
+                            }
+
+                            @Override
+                            public void onMarkerDragEnd(@NonNull Marker marker) {
+                                // markerDetailLayout.setVisibility(View.GONE);
+                                LatLng newpos = marker.getPosition();
+                                String snippet = marker.getSnippet();
+
+
+                                String latStr = df.format(newpos.latitude);
+                                String lngStr = df.format(newpos.longitude);
+                                markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                        + System.lineSeparator() + "Marker id: " + snippet);
+
+                                curLat = newpos.latitude;
+                                curLng = newpos.longitude;
+
+                                if (snippet != null) {
+                                    curr_id = Integer.valueOf(snippet);
+                                } else {
+
+                                }
+                            }
+
+                            @Override
+                            public void onMarkerDragStart(@NonNull Marker marker) {
+                                markerDetailLayout.setVisibility(View.VISIBLE);
+                                saveChangedMarkerButton.setVisibility(View.VISIBLE);
+                                cancelChangedMarkerButton.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                                newButton.setVisibility(View.GONE);
+
+                                markerNameText.setText(marker.getTitle());
+                                startPos = marker.getPosition();
+                                String snippet = marker.getSnippet();
+                                String latStr = df.format(startPos.latitude);
+                                String lngStr = df.format(startPos.longitude);
+                                markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                        + System.lineSeparator() + "Marker id: " + snippet);
+                            }
+                        }
+                );
             }
         });
 
@@ -197,6 +258,62 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                 saveNewMarkerButton.setVisibility(View.GONE);
                 cancelNewMarkerButton.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
+                // Restore normal drag functionality to markers
+                mMap.setOnMarkerDragListener(
+                        new GoogleMap.OnMarkerDragListener() {
+                            final DecimalFormat df = new DecimalFormat("#.#####");
+                            LatLng startPos, endPos;
+
+                            @Override
+                            public void onMarkerDrag(@NonNull Marker marker) {
+                                LatLng newpos = marker.getPosition();
+                                String snippet = marker.getSnippet();
+                                String latStr = df.format(newpos.latitude);
+                                String lngStr = df.format(newpos.longitude);
+                                markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                        + System.lineSeparator() + "Marker id: " + snippet);
+                            }
+
+                            @Override
+                            public void onMarkerDragEnd(@NonNull Marker marker) {
+                                // markerDetailLayout.setVisibility(View.GONE);
+                                LatLng newpos = marker.getPosition();
+                                String snippet = marker.getSnippet();
+
+
+                                String latStr = df.format(newpos.latitude);
+                                String lngStr = df.format(newpos.longitude);
+                                markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                        + System.lineSeparator() + "Marker id: " + snippet);
+
+                                curLat = newpos.latitude;
+                                curLng = newpos.longitude;
+
+                                if (snippet != null) {
+                                    curr_id = Integer.valueOf(snippet);
+                                } else {
+
+                                }
+                            }
+
+                            @Override
+                            public void onMarkerDragStart(@NonNull Marker marker) {
+                                markerDetailLayout.setVisibility(View.VISIBLE);
+                                saveChangedMarkerButton.setVisibility(View.VISIBLE);
+                                cancelChangedMarkerButton.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                                newButton.setVisibility(View.GONE);
+
+                                markerNameText.setText(marker.getTitle());
+                                startPos = marker.getPosition();
+                                String snippet = marker.getSnippet();
+                                String latStr = df.format(startPos.latitude);
+                                String lngStr = df.format(startPos.longitude);
+                                markerDetailText.setText("Lat: " + latStr + System.lineSeparator() + "Lng: " + lngStr
+                                        + System.lineSeparator() + "Marker id: " + snippet);
+                            }
+                        }
+                );
                 newButton.setVisibility(View.VISIBLE);
                 Log.i(TAG, "onClick: " + newMarker.isVisible());
             }
@@ -227,6 +344,29 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                             .draggable(true);
 
                     mMap.addMarker(newMarker);
+
+                    //MARK: MarkerDragListener
+                    mMap.setOnMarkerDragListener(
+                            new GoogleMap.OnMarkerDragListener() {
+                                final DecimalFormat df = new DecimalFormat("#.#####");
+
+                                @Override
+                                public void onMarkerDrag(@NonNull Marker marker) {
+                                }
+
+                                @Override
+                                public void onMarkerDragEnd(@NonNull Marker marker) {
+                                    LatLng newpos = marker.getPosition();
+                                    String snippet = marker.getSnippet();
+                                    curLat = newpos.latitude;
+                                    curLng = newpos.longitude;
+                                }
+
+                                @Override
+                                public void onMarkerDragStart(@NonNull Marker marker) {
+                                }
+                            }
+                    );
                 } else {
                     Log.i(TAG, "onClick: New Water");
                 }
@@ -242,20 +382,27 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     }
 
     private void saveNewMarker() {
+        LatLng latLng = newMarker.getPosition();
+        String markerName = editMarkerName.getText().toString();
+        String code = editMarkerCode.getText().toString();
+
+        markerViewModel.insert(new BMarker(-999, markerName, code, "type", water_id, curLat, curLng));
     }
 
     // Called from WaterViewHolder
-    public void onWaterListItemClicked(int id, String water_name) {
-        Log.i("Info", "onClickCalled: " + water_name + id);
+    public void onWaterListItemClicked(int water_id, String water_name) {
+        Log.i("Info", "onClickCalled: " + water_name + water_id);
         // Hide the list and show the
         // recyclerView.setVisibility(View.GONE);
 
+        this.water_id = water_id;
+        this.water_name = water_name;
         boolean draggable = true;
         addMarkerLayout.setVisibility(View.GONE);
         markerDetailLayout.setVisibility(View.GONE);
         viewMode = 1;
         // Get markerList for water_id
-        bMarkerList = markerViewModel.getMarkerListForWater(id);
+        bMarkerList = markerViewModel.getMarkerListForWater(water_id);
 
         // If no markers, then display all
         if (bMarkerList.isEmpty()) {
@@ -272,12 +419,13 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Log.i("Info", "onMapReady: ");
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         mMap.setOnMapLoadedCallback(this);
         mMap.setMinZoomPreference(8);
         mMap.setMaxZoomPreference(20);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
 
         //MARK: MarkerDragListener
         mMap.setOnMarkerDragListener(

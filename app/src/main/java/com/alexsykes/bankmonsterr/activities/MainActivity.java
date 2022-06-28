@@ -499,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     .snippet(snippet)
                     .visible(true);
 
-            if (type.equals("Car Park")) {
+            if (type.equals("Car park")) {
                 markerOptions.visible(true);
             } else {
                 markerOptions.visible(true);
@@ -519,15 +519,14 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         for (BMarker BMarker : bMarkerList) {
             latLng = new LatLng(BMarker.getLat(), BMarker.getLng());
             builder.include(latLng);
-            code = BMarker.getCode();
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(latLng);
-            mMap.addMarker(markerOptions);
+//            code = BMarker.getCode();
+//            MarkerOptions markerOptions = new MarkerOptions()
+//                    .position(latLng);
+//            mMap.addMarker(markerOptions);
         }
 
         LatLngBounds bounds =
                 builder.build();
-
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
 
     }

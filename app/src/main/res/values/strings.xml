@@ -36,4 +36,6 @@
     <string name="marker_detail">Marker detail</string>
     <string name="marker_name">Name</string>
     <string name="marker_code">Code</string>
+    <string name="car_park">Car park</string>
+    <string name="limit">Limit</string>
 </resources>

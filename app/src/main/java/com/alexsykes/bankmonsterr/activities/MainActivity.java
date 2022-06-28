@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
     String water_name;
     int water_id;
     MarkerViewModel markerViewModel;
+    RadioGroup typeGroup;
     List<BMarker> bMarkerList;
     LinearLayout markerDetailLayout, addMarkerLayout;
     TextView markerNameText, markerDetailText;
@@ -145,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         markerDetailText = findViewById(R.id.markerDetailText);
         editMarkerCode = findViewById(R.id.editMarkerCode);
         editMarkerName = findViewById(R.id.editMarkerName);
+        typeGroup = findViewById(R.id.typeGroup);
 
         saveChangedMarkerButton = findViewById(R.id.saveChangedMarkerButton);
         saveNewMarkerButton = findViewById(R.id.saveNewMarkerButton);
@@ -339,6 +342,8 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
                     newButton.setVisibility(View.GONE);
 
                     LatLng centre = mMap.getCameraPosition().target;
+                    curLat = centre.latitude;
+                    curLng = centre.longitude;
                     newMarker = new MarkerOptions()
                             .position(centre)
                             .draggable(true);
@@ -385,8 +390,10 @@ public class MainActivity extends AppCompatActivity implements GoogleMap.OnMapLo
         LatLng latLng = newMarker.getPosition();
         String markerName = editMarkerName.getText().toString();
         String code = editMarkerCode.getText().toString();
+        Button selected = findViewById(typeGroup.getCheckedRadioButtonId());
+        String type = selected.getText().toString();
 
-        markerViewModel.insert(new BMarker(-999, markerName, code, "type", water_id, curLat, curLng));
+        markerViewModel.insert(new BMarker(-999, markerName, code, type, water_id, curLat, curLng));
     }
 
     // Called from WaterViewHolder
